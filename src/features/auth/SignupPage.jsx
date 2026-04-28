@@ -127,8 +127,8 @@ function TermsContentModal({ term, onClose }) {
       <div className="relative bg-white rounded-[32px] w-full max-w-[600px] max-h-[80vh] flex flex-col shadow-2xl">
         <div className="flex items-center justify-between px-10 pt-10 pb-6 border-b border-[#f5f5f5]">
           <div>
-            <span className={`text-[11px] font-black px-2 py-0.5 rounded-full mr-2 ${term.isRequired ? 'bg-[#e8f7ef] text-[#3ea76e]' : 'bg-[#f5f5f5] text-[#aaa]'}`}>
-              {term.isRequired ? '필수' : '선택'}
+            <span className={`text-[11px] font-black px-2 py-0.5 rounded-full mr-2 ${term.required ? 'bg-[#e8f7ef] text-[#3ea76e]' : 'bg-[#f5f5f5] text-[#aaa]'}`}>
+              {term.required ? '필수' : '선택'}
             </span>
             <span className="text-[18px] font-black text-[#111]">{term.title}</span>
           </div>
@@ -364,8 +364,8 @@ export default function SignupPage() {
                         className="flex-1 text-[13px] font-bold text-[#555] cursor-pointer"
                         onClick={() => handleTermToggle(term.id)}
                       >
-                        <span className={`mr-1.5 text-[11px] font-black ${term.isRequired ? 'text-[#3ea76e]' : 'text-[#aaa]'}`}>
-                          [{term.isRequired ? '필수' : '선택'}]
+                        <span className={`mr-1.5 text-[11px] font-black ${term.required ? 'text-[#3ea76e]' : 'text-[#aaa]'}`}>
+                          [{term.required ? '필수' : '선택'}]
                         </span>
                         {term.title}
                       </span>

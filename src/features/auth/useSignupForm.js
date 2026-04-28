@@ -53,7 +53,7 @@ export default function useSignupForm() {
       return
     }
 
-    const requiredTerms     = terms.filter(t => t.isRequired)
+    const requiredTerms     = terms.filter(t => t.required)
     const allRequiredAgreed = requiredTerms.every(t => termsAgreed[t.id])
     if (!allRequiredAgreed) {
       setError('필수 약관에 모두 동의해야 합니다.')

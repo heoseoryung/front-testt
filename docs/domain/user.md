@@ -1,6 +1,6 @@
 # User 도메인
 
-기준일: 2026-04-17
+기준일: 2026-04-28
 
 ## 개요
 
@@ -24,55 +24,105 @@
 
 `updateProfile` 성공 시 `invalidatesTags: ['Auth', 'User']` → `getMe` + `getProfile` 캐시 모두 갱신.
 
+### GET /users/me 응답 구조
+
+`transformResponse: (res) => res.data`
+
+```json
+{
+  "userId": "user1234",
+  "name": "홍길동",
+  "email": "user@example.com",
+  "profileImgUrl": "https://lh3.googleusercontent.com/a/...",
+  "phoneNumber": "010-1234-5678",
+  "smsAllowed": false,
+  "emailAllowed": false,
+  "updatedAt": "2026-04-27T10:20:33"
+}
+```
+
+> `profileImgUrl`: 소셜 로그인 계정이면 소셜 제공자 이미지 URL, 없으면 `null`.
+
 ### GET /users/profile 응답 구조
+
+`transformResponse: (res) => res.data`
+
+```json
+{
+  "userSummary": {
+    "id": 1,
+    "name": "홍길동",
+    "profileImgUrl": "https://lh3.googleusercontent.com/a/...",
+    "greetingMessage": "홍길동님 안녕하세요!",
+    "membershipLevel": "일반회원"
+  },
+  "benefits": {
+    "points": 0,
+    "couponCount": 0,
+    "orderTotalCount": 3
+  },
+  "orderStatusSummary": {
+    "recentPeriod": "최근 3개월",
+    "mainStatuses": {
+      "pendingPayment": 0,
+      "preparing": 0,
+      "shipping": 0,
+      "delivered": 0
+    },
+    "subStatuses": {
+      "cancelled": 0,
+      "exchanged": 0,
+      "returned": 0
+    }
+  },
+  "activityCounts": {
+    "wishlistCount": 0,
+    "postCount": 0,
+    "regularDeliveryCount": 0
+  }
+}
+```
+
+> 컴포넌트 접근 경로 예시: `profile.userSummary.name`, `profile.benefits.points`, `profile.orderStatusSummary.mainStatuses.pendingPayment`  
+> 쿠폰·주문 상태·찜·게시글·정기배송 수는 현재 서버 기본값 `0`.
+
+### PUT /users/profile 요청 바디
+
+```json
+{
+  "phoneNumber": "010-2222-3333",
+  "currentPassword": "Password1!",
+  "newPassword": "NewPassword1!",
+  "confirmPassword": "NewPassword1!",
+  "marketingConsent": { "smsAllowed": true, "emailAllowed": false }
+}
+```
+
+> `name`·`email`은 서버에서 수정하지 않음 (전송해도 무시).  
+> 비밀번호 변경 시 `currentPassword`·`newPassword`·`confirmPassword` 세 필드 모두 필요.
+
+### PUT /users/profile 응답
+
+수정된 사용자 데이터 반환. `invalidatesTags: ['Auth', 'User']` → `getMe`·`getProfile` 캐시 자동 갱신.
 
 ```json
 {
   "status": "success",
   "data": {
-    "userSummary": {
-      "id": "username123",
-      "name": "홍길동",
-      "greetingMessage": "안녕하세요, 홍길동 님!",
-      "membershipLevel": "GOLD"
-    },
-    "benefits": {
-      "points": 12500,
-      "couponCount": 3,
-      "orderTotalCount": 27
-    },
-    "orderStatusSummary": {
-      "paymentPending": 0,
-      "preparing": 1,
-      "shipping": 2,
-      "delivered": 24
-    },
-    "activityCounts": {
-      "wishlistCount": 5,
-      "reviewCount": 10
-    }
+    "userId": "user1234", "name": "홍길동", "email": "user@example.com",
+    "profileImgUrl": null, "phoneNumber": "010-2222-3333",
+    "smsAllowed": true, "emailAllowed": false, "updatedAt": "2026-04-27T10:30:00"
   }
 }
 ```
 
-`transformResponse`: `res.data` 그대로 반환.
+### DELETE /users 응답
 
-### updateProfile 요청 바디
-
-```js
-{
-  name: string,
-  phoneNumber: string,
-  email: string,
-  currentPassword: string,
-  newPassword: string,
-  confirmPassword: string,
-  marketingConsent: {
-    smsAllowed: boolean,
-    emailAllowed: boolean,
-  }
-}
+```json
+{ "status": "success", "data": { "withdrawal_date": "2026-04-27T10:20:33" } }
 ```
+
+> 소셜 전용 계정은 `password` 없이 빈 body `{}`로 호출 가능.
 
 ---
 
@@ -89,35 +139,40 @@
 
 ### GET /users/addresses 응답 주소 구조
 
+`transformResponse: (res) => res.data` → 컴포넌트는 `data.addresses`·`data.totalCount` 접근.
+
 ```json
 {
-  "addressId": 1,
+  "addressId": 10,
   "addressName": "집",
-  "default": true,
+  "isDefault": true,
   "recipientName": "홍길동",
   "phoneNumber": "010-1234-5678",
-  "postcode": "12345",
-  "baseAddress": "서울특별시 강남구 테헤란로",
-  "detailAddress": "101동 202호",
-  "extraAddress": "(역삼동)",
-  "addressType": "HOME"
+  "postcode": "06236",
+  "baseAddress": "서울 강남구 테헤란로 123",
+  "detailAddress": "101동 1001호",
+  "extraAddress": "역삼동",
+  "addressType": "ROAD",
+  "updatedAt": "2026-04-27T10:20:33"
 }
 ```
 
 ### createAddress / updateAddress 요청 바디
 
-```js
+```json
 {
-  addressName: string,    // 배송지 별칭 (예: '집', '회사')
-  postcode: string,
-  baseAddress: string,
-  detailAddress: string,
-  extraAddress: string,
-  addressType: string,    // 'HOME' | 'WORK' | etc.
-  default: boolean,
-  // recipientName, phoneNumber 는 서버가 사용자 정보로 자동 채움
+  "addressName": "집",
+  "postcode": "06236",
+  "baseAddress": "서울 강남구 테헤란로 123",
+  "detailAddress": "101동 1001호",
+  "extraAddress": "역삼동",
+  "addressType": "ROAD",
+  "isDefault": true
 }
 ```
+
+> `isDefault` — 기본 배송지 여부 (`default` 아님). 첫 번째 배송지는 자동으로 기본 배송지.  
+> `recipientName`·`phoneNumber`는 서버가 로그인 사용자 정보로 자동 채움.
 
 ---
 

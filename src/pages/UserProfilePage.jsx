@@ -13,9 +13,9 @@ export default function UserProfilePage() {
   const menuItems = [
     { title: '주문조회', to: '/order/list' },
     { title: '회원정보', to: '/profile/modify' },
-    { title: '관심상품', count: profile?.wishlistCount, to: '/wishlist' },
+    { title: '관심상품', count: profile?.activityCounts?.wishlistCount, to: '/wishlist' },
     { title: '적립금', to: '/point' },
-    { title: '쿠폰', count: profile?.couponCount, to: '/coupon' },
+    { title: '쿠폰', count: profile?.benefits?.couponCount, to: '/coupon' },
     { title: '게시물관리', to: '/profile/posts' },
     { title: '배송 주소록 관리', to: '/address' },
   ]
@@ -30,7 +30,15 @@ export default function UserProfilePage() {
     )
   }
 
-  const deliveryStatus = profile?.deliveryStatus ?? DELIVERY_STATUS_LABELS.map(label => ({ label, count: 0 }))
+  const mainStatuses = profile?.orderStatusSummary?.mainStatuses
+  const deliveryStatus = mainStatuses
+    ? [
+        { label: '입금전',    count: mainStatuses.pendingPayment ?? 0 },
+        { label: '배송준비중', count: mainStatuses.preparing      ?? 0 },
+        { label: '배송중',    count: mainStatuses.shipping        ?? 0 },
+        { label: '배송완료',  count: mainStatuses.delivered       ?? 0 },
+      ]
+    : DELIVERY_STATUS_LABELS.map(label => ({ label, count: 0 }))
 
   return (
     <div className="bg-[#FCFBF9] min-h-screen text-[#111]">
@@ -41,20 +49,20 @@ export default function UserProfilePage() {
         </div>
 
         <section className="bg-white rounded-[40px] border border-[#eee] p-10 mb-8 shadow-[0_10px_40px_rgba(0,0,0,0.03)]">
-          {profile?.rank && (
+          {profile?.userSummary?.membershipLevel && (
             <span className="inline-block px-3 py-1 rounded-full text-[11px] font-black bg-[#f0faf4] text-[#3ea76e] mb-4 tracking-widest">
-              {profile.rank}
+              {profile.userSummary.membershipLevel}
             </span>
           )}
           <h2 className="text-[26px] font-black tracking-tight text-[#111] mb-10">
-            {profile?.name ?? '회원'}님, 안녕하세요!
+            {profile?.userSummary?.name ?? '회원'}님, 안녕하세요!
           </h2>
 
           <div className="flex justify-between items-center px-4">
             {[
-              { label: '적립금', value: profile?.points != null ? `${profile.points}원` : '-' },
-              { label: '쿠폰', value: profile?.couponCount != null ? `${profile.couponCount}개` : '-' },
-              { label: '주문내역', value: profile?.orderCount != null ? `${profile.orderCount}건` : '-' },
+              { label: '적립금', value: profile?.benefits?.points != null ? `${profile.benefits.points}원` : '-' },
+              { label: '쿠폰', value: profile?.benefits?.couponCount != null ? `${profile.benefits.couponCount}개` : '-' },
+              { label: '주문내역', value: profile?.benefits?.orderTotalCount != null ? `${profile.benefits.orderTotalCount}건` : '-' },
             ].map((item, i) => (
               <div key={item.label} className="flex items-center flex-1">
                 <div className="text-center flex-1">
@@ -92,9 +100,9 @@ export default function UserProfilePage() {
 
           <div className="flex justify-around py-5 bg-[#f9f9f9] rounded-2xl border border-[#eee] mb-8">
             {[
-              { label: '취소', count: profile?.cancelCount ?? 0 },
-              { label: '교환', count: profile?.exchangeCount ?? 0 },
-              { label: '반품', count: profile?.returnCount ?? 0 },
+              { label: '취소', count: profile?.orderStatusSummary?.subStatuses?.cancelled ?? 0 },
+              { label: '교환', count: profile?.orderStatusSummary?.subStatuses?.exchanged ?? 0 },
+              { label: '반품', count: profile?.orderStatusSummary?.subStatuses?.returned  ?? 0 },
             ].map((item, i) => (
               <div key={item.label} className="flex items-center gap-3 text-[13px] font-bold">
                 <span className="text-[#aaa]">{item.label}</span>

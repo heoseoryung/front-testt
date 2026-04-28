@@ -1,6 +1,6 @@
 # 프로젝트 구조
 
-기준일: 2026-04-24 (react-day-picker·date-fns 추가 / cart API URL 변경 / CheckoutPage 배송메시지·Toss위젯 수정 / searchApi 네비게이션·리뷰헤더 추가)
+기준일: 2026-04-28 (ragApi 추가 / constants.js 부분 구현 / /review/write 보호 라우트로 변경)
 
 ---
 
@@ -19,7 +19,8 @@ src/
 │   ├── paymentApi.js             결제 준비·승인 엔드포인트 (Toss Payments 브리지)
 │   ├── reviewApi.js              리뷰 엔드포인트
 │   ├── userApi.js                사용자 프로필·배송지 엔드포인트
-│   └── wishlistApi.js            위시리스트 엔드포인트
+│   ├── wishlistApi.js            위시리스트 엔드포인트
+│   └── ragApi.js                 RAG AI 채팅·검색·문서 관리 엔드포인트 (RagServer)
 │
 ├── features/                     도메인별 상태·컴포넌트
 │   ├── auth/
@@ -84,7 +85,7 @@ src/
 │   ├── UserCouponPage.jsx        /coupon (보호)
 │   ├── UserPointPage.jsx         /point (보호)
 │   ├── UserAddressPage .jsx      /address (보호) ← 파일명에 공백 있음 (주의)
-│   ├── WriteReviewPage.jsx       /review/write
+│   ├── WriteReviewPage.jsx       /review/write (보호)
 │   ├── ReviewPage.jsx            /review
 │   ├── BrandStoryPage.jsx        /brand-story
 │   ├── CSPage.jsx                /cs
@@ -98,6 +99,7 @@ src/
 │   │   ├── Pagination.jsx
 │   │   └── Spinner.jsx
 │   └── utils/
+│       ├── constants.js          공통 상수 (PRODUCT_PAGE_SIZE, NOTICE_PAGE_SIZE, NOTICE_SEARCH_RANGES, NOTICE_SEARCH_TYPES)
 │       ├── formatters.js         숫자·날짜 포맷, 금액 계산 순수 함수
 │       └── oauth2.js             소셜 로그인 state nonce 생성
 │
@@ -147,7 +149,7 @@ BrowserRouter
         │   ├── /coupon            ProtectedRoute → UserCouponPage
         │   ├── /point             ProtectedRoute → UserPointPage
         │   ├── /address           ProtectedRoute → UserAddressPage
-        │   ├── /review/write      WriteReviewPage
+        │   ├── /review/write      ProtectedRoute → WriteReviewPage
         │   └── *                  LandingPage (fallback)
         │
         ├── /login                 LoginPage (Layout 밖)
@@ -224,9 +226,10 @@ store = {
 | `userApi.js` | 프로필·비밀번호·배송지 CRUD | user-server | `User`, `Address` |
 | `wishlistApi.js` | 위시리스트 CRUD | wishlist-server | `Wishlist` |
 | `noticeApi.js` | 공지·FAQ 상세 | notice-server(Board Server) | `Notice`, `FAQ` |
+| `ragApi.js` | AI 채팅·하이브리드 검색·문서 관리 | rag-server | `Rag` |
 
 > `tagTypes` 전체 목록 (`src/api/apiSlice.js`):  
-> `['Auth', 'Product', 'Category', 'Cart', 'Order', 'Review', 'User', 'Address', 'Wishlist', 'Search', 'Payment', 'Notice', 'FAQ']`
+> `['Auth', 'Product', 'Category', 'Cart', 'Order', 'Review', 'User', 'Address', 'Wishlist', 'Search', 'Payment', 'Notice', 'FAQ', 'Rag']`
 
 ---
 
@@ -275,5 +278,5 @@ GET /users/me ─────────►  로그인 사용자 정보 반환
 | baseQuery.js | 별도 파일 없음 — withReauth 로직이 `src/api/apiSlice.js` 내부에 포함됨 |
 | createOrder 응답 | 서버가 text/plain(`200001`)으로 orderId 반환 — `transformResponse`에서 `typeof res === 'number' ? res : Number(res)` 로 파싱. 응답 포맷 변경 시 결제 플로우 중단됨 |
 | cancelOrder | 서버 saga 비활성화로 현재 409 반환. 취소 UI 구현 시 서버 상태 확인 필요 |
-| constants.js 누락 | `RETURN_DEADLINE_DAYS`, `ORDER_PAGE_SIZE`, `ORDER_STATUS` 등 order.md에 명시된 상수가 실제 코드에 없음 |
+| constants.js 부분 구현 | `PRODUCT_PAGE_SIZE`, `NOTICE_PAGE_SIZE`, `NOTICE_SEARCH_RANGES`, `NOTICE_SEARCH_TYPES`만 구현됨. `RETURN_DEADLINE_DAYS`, `ORDER_PAGE_SIZE`, `ORDER_STATUS` 등 order.md에 명시된 상수는 여전히 없음 |
 | .env 마지막 줄 개행 | `.env` 파일 마지막 줄에 개행문자가 없으면 dotenv 파서가 해당 줄을 읽지 못함. `VITE_TOSS_CLIENT_KEY`가 마지막 줄이면 미적용됨. `.env` 편집 후 반드시 마지막 줄 뒤에 개행 확인 (`cat -A .env`로 `$` 유무 확인) |

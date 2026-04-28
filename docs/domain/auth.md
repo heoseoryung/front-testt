@@ -1,6 +1,6 @@
 # Auth 도메인
 
-기준일: 2026-04-17
+기준일: 2026-04-28
 
 ## 개요
 
@@ -134,22 +134,21 @@ if (action.type === logout.type) {
 
 인증 불필요. 회원가입 화면 진입 시 호출.
 
-**응답 구조**
+**서버 원본 응답**
 
 ```json
 {
+  "status": "success",
   "terms": [
-    { "id": "service_terms",   "title": "서비스 이용약관",       "content": "...", "required": true,  "version": "1.0", "lastUpdated": "2024-01-01" },
-    { "id": "privacy_policy",  "title": "개인정보보호정책",       "content": "...", "required": true,  "version": "1.0", "lastUpdated": "2024-01-01" },
-    { "id": "marketing_sms",   "title": "SMS 마케팅 정보 수신",   "content": "...", "required": false, "version": "1.0", "lastUpdated": "2024-01-01" },
-    { "id": "marketing_email", "title": "이메일 마케팅 정보 수신", "content": "...", "required": false, "version": "1.0", "lastUpdated": "2024-01-01" }
+    { "id": "service_terms", "title": "서비스 이용약관", "content": "<p>...</p>", "isRequired": true,  "version": "1.0", "lastUpdated": "2026-04-27T10:20:33" },
+    { "id": "marketing_sms", "title": "SMS 마케팅 수신 동의", "content": "<p>...</p>", "isRequired": false, "version": "1.0", "lastUpdated": "2026-04-27T10:20:33" }
   ]
 }
 ```
 
-> 필드명: `required` (구버전 `isRequired` → 변경됨). `transformResponse`에서 `required ?? isRequired`로 normalize.
+> 서버는 `isRequired` 필드명을 사용한다. `authApi.js`의 `transformResponse`에서 `required: t.required ?? t.isRequired ?? false`로 normalize → 컴포넌트는 `t.required`로 접근.
 
-### POST /auth/login / POST /auth/signup 응답
+### POST /auth/signup / POST /auth/login / POST /auth/refresh 응답
 
 ```json
 { "accessToken": "eyJ..." }
@@ -157,33 +156,98 @@ if (action.type === logout.type) {
 
 토큰은 HttpOnly 쿠키로도 동시 발급. 프론트는 응답 바디의 `accessToken`을 저장하지 않는다 (No Token Storage 원칙).
 
-### POST /auth/refresh
-
-**경로:** `POST /auth/refresh`  
-응답: 새 accessToken HttpOnly 쿠키 갱신 (응답 바디 없음).
-```
-
-### POST /auth/signup
-
-**요청 바디**
+### POST /auth/signup 요청 바디
 
 ```json
 {
-  "username": "testuser",
+  "username": "user1234",
   "name": "홍길동",
-  "email": "test@example.com",
-  "password": "TestPass1234!",
+  "email": "user@example.com",
+  "password": "Password1!",
   "phoneNumber": "010-1234-5678",
   "termsAgreed": {
     "service_terms": true,
     "privacy_policy": true,
-    "marketing_sms": false,
-    "marketing_email": false
+    "marketing_sms": false
   }
 }
 ```
 
 **비밀번호 규칙:** 8~20자, 대/소문자 + 숫자 + 특수문자(`@$!%*?&`) 각 1개 이상.
+
+### POST /auth/logout 응답
+
+```json
+{}
+```
+
+`Authorization` 헤더 없으면 `accessToken` 쿠키 기준으로 로그아웃. 응답 후 `accessToken`·`refreshToken` 쿠키 만료.
+
+---
+
+## 에러 응답 형식
+
+### Validation 에러 (400)
+
+`@Valid` DTO 검증 실패 — `errors`는 필드별 Map. 여러 필드가 동시에 포함될 수 있음.
+
+```json
+{
+  "status": 400,
+  "code": "VALIDATION_ERROR",
+  "message": "입력값이 올바르지 않습니다.",
+  "errors": {
+    "username": "아이디는 4자 이상 20자 이하여야 합니다.",
+    "password": "비밀번호는 영문 대문자/소문자/숫자/특수문자를 포함해야 합니다."
+  }
+}
+```
+
+### Business 에러 (400)
+
+중복 아이디·이메일, 이메일 미인증, 로그인 실패 등 — `errors` 없이 `message`만 내려옴.
+
+```json
+{
+  "status": 400,
+  "code": "BAD_REQUEST",
+  "message": "아이디 또는 비밀번호가 올바르지 않습니다. (남은 시도 횟수: 4회)"
+}
+```
+
+> 로그인 실패 메시지에 **남은 시도 횟수**가 포함된다. 프론트는 `err?.data?.message`를 그대로 표시.
+
+### 계정 잠금 (423)
+
+로그인 실패 5회 초과 시.
+
+```json
+{
+  "status": 423,
+  "code": "ACCOUNT_LOCKED",
+  "message": "로그인 시도 횟수를 초과했습니다. 900초 후 다시 시도해주세요.",
+  "errors": {
+    "remainSeconds": "900"
+  }
+}
+```
+
+> `errors.remainSeconds`는 **문자열**로 내려온다. 프론트에서 `Number(errors.remainSeconds)` 변환 불필요 — 템플릿 리터럴에서 자동 coercion.
+
+### 주요 상태 코드 요약
+
+| 코드 | 의미 | 프론트 처리 |
+|---|---|---|
+| `400 VALIDATION_ERROR` | DTO 검증 실패 | `Object.values(errors).join(' ')` |
+| `400 BAD_REQUEST` | 비즈니스 로직 실패 (중복·로그인 실패 등) | `err?.data?.message` 표시 |
+| `401 Unauthorized` | 토큰 누락·만료 | `apiSlice.js`에서 `dispatch(logout())` |
+| `415 Unsupported Media Type` | 잘못된 Content-Type | `err?.data?.message` fallback |
+| `423 Locked` | 로그인 5회 실패, 계정 잠금 | `errors.remainSeconds` 있으면 카운트다운, 없으면 일반 메시지 |
+| `401 Unauthorized` | 토큰 누락·만료 | `apiSlice.js`에서 `dispatch(logout())` |
+| `415 Unsupported Media Type` | 잘못된 Content-Type | `message` fallback 표시 |
+| `423 Locked` | 로그인 실패 횟수 초과, 계정 일시 잠금 | `errors.remainSeconds`(초) 있으면 카운트다운 메시지, 없으면 일반 잠금 메시지 |
+
+> `423` 응답의 `errors.remainSeconds` 필드는 백엔드 선택사항. 없으면 "잠시 후 다시 시도" 메시지로 자동 fallback.
 
 ---
 

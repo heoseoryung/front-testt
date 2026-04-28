@@ -84,7 +84,7 @@ export default function UserAddressPage() {
       detailAddress: form.detailAddress,
       extraAddress:  form.extraAddress,
       addressType:   form.addressType,
-      default:       form.isDefault,
+      isDefault:     form.isDefault,
     }
 
     try {
