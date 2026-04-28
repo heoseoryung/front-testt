@@ -6,6 +6,7 @@ import { useAddWishlistItemMutation } from '../api/wishlistApi'
 import { useAppDispatch } from '../hooks/useAppDispatch'
 import { initCheckedItems } from '../features/cart/cartSlice'
 import SwiffyReviewSummary from './ReviewPage'
+import { useGetProductReviewsQuery } from '../api/reviewApi'
 import Toast from '../features/components/ui/Toast'
 import Spinner from '../shared/components/Spinner'
 
@@ -58,12 +59,18 @@ function ImageSlider({ images, isSoldOut }) {
 
 // ─── 탭 하단 공통 콘텐츠 ─────────────────────────────────────────────────────────
 function TabContent({ activeTab, product, setActiveTab }) {
+  const { data: reviewData } = useGetProductReviewsQuery(
+    { productId: product.id, params: { page: 0, size: 1 } },
+    { skip: !product.id },
+  )
+  const reviewCount = reviewData?.totalElements ?? 0
+
   return (
     <>
       <div className="flex mb-10 border-b border-[#eee] sticky top-0 bg-white z-10">
         {[
           { key: 'detail', label: '상세정보' },
-          { key: 'review', label: `사용후기` },
+          { key: 'review', label: `사용후기 ${reviewCount > 0 ? `(${reviewCount})` : ''}` },
           { key: 'qna', label: '제품문의' },
           { key: 'info', label: '배송/교환/반품' },
         ].map(tab => (

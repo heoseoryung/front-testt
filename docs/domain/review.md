@@ -100,7 +100,7 @@ review
 
 | 훅 | 메서드 | 경로 | 설명 |
 |---|---|---|---|
-| `useGetProductReviewsQuery({ productId, params })` | GET | `/reviews?productId=:id&page=:p&size=:s` | 상품별 리뷰 목록 |
+| `useGetProductReviewsQuery({ productId, params })` | GET | `/reviews?productId=:id&page=:p&size=:s` | 상품별 리뷰 목록. `ProductDetailPage` 탭에서 `size:1`로 먼저 호출해 `totalElements`(리뷰 개수)를 탭 라벨에 표시 |
 | `useGetMyReviewsQuery(params)` | GET | `/reviews/mine` | 내 리뷰 목록 |
 | `useGetReviewHighlightsQuery()` | GET | `/main/review-highlights` | 홈 포토리뷰 하이라이트 (메인 전용) — `{ title, items }` 반환 |
 
