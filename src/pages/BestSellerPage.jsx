@@ -11,7 +11,7 @@ export default function BestSellerPage() {
 
   // 베스트셀러는 검색 랭킹 기반 — sort 파라미터 없음
   const { data, isLoading } = useGetBestsellerProductsQuery({
-    page: currentPage - 1,  // Search Server: 0-based
+    page: currentPage - 1,
   })
 
   const products   = data?.content       ?? []

@@ -14,7 +14,7 @@ export default function NoticePage() {
   const [searchType, setType]   = useState(NOTICE_SEARCH_TYPES[0].value)  // '제목'
 
   const { data, isLoading, isError } = useSearchNoticesQuery({
-    page: page - 1, // 0-based API
+    page: page - 1,
     searchRange,
     ...(keyword && { keyword, searchType }),
   })
