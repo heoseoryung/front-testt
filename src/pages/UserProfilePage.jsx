@@ -16,7 +16,8 @@ export default function UserProfilePage() {
     { title: '관심상품', count: profile?.activityCounts?.wishlistCount, to: '/wishlist' },
     { title: '적립금', to: '/point' },
     { title: '쿠폰', count: profile?.benefits?.couponCount, to: '/coupon' },
-    { title: '게시물관리', to: '/profile/posts' },
+    { title: '게시물관리', count: profile?.activityCounts?.postCount, to: '/profile/posts' },
+    { title: '정기배송', count: profile?.activityCounts?.regularDeliveryCount, to: '/regular-delivery' },
     { title: '배송 주소록 관리', to: '/address' },
   ]
 
@@ -70,7 +71,7 @@ export default function UserProfilePage() {
                 </span>
               )}
               <h2 className="text-[26px] font-black tracking-tight text-[#111]">
-                {profile?.userSummary?.name ?? '회원'}님, 안녕하세요!
+                {profile?.userSummary?.greetingMessage ?? `${profile?.userSummary?.name ?? '회원'}님, 안녕하세요!`}
               </h2>
             </div>
           </div>

@@ -11,6 +11,7 @@ import {
 } from '@/api/userApi'
 
 const EMPTY_FORM = {
+  addressName: '',
   postcode: '',
   baseAddress: '',
   extraAddress: '',
@@ -49,6 +50,7 @@ export default function UserAddressPage() {
 
   const openEdit = (item) => {
     setForm({
+      addressName:   item.addressName ?? '',
       postcode:      item.postcode,
       baseAddress:   item.baseAddress,
       extraAddress:  item.extraAddress ?? '',
@@ -79,6 +81,7 @@ export default function UserAddressPage() {
     setModalError('')
 
     const body = {
+      addressName:   form.addressName || undefined,
       postcode:      form.postcode,
       baseAddress:   form.baseAddress,
       detailAddress: form.detailAddress,
@@ -194,7 +197,7 @@ export default function UserAddressPage() {
       {isModalOpen && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsModalOpen(false)} />
-          <div className="relative bg-white rounded-[32px] w-full max-w-[480px] max-h-[90vh] overflow-y-auto shadow-2xl p-8">
+          <div className="relative bg-white rounded-[32px] w-full max-w-[560px] max-h-[90vh] overflow-y-auto shadow-2xl p-8">
             <button onClick={() => setIsModalOpen(false)} className="absolute top-6 right-6 text-[#bbb] hover:text-[#111] bg-transparent border-none cursor-pointer">
               <X size={20} />
             </button>
@@ -204,6 +207,18 @@ export default function UserAddressPage() {
             </h3>
 
             <div className="space-y-4">
+              {/* 배송지 별명 */}
+              <div>
+                <p className="text-[12px] font-bold text-[#aaa] mb-1.5 ml-1">배송지 별명</p>
+                <input
+                  type="text"
+                  value={form.addressName}
+                  onChange={e => set('addressName', e.target.value)}
+                  placeholder="예: 집, 회사 (미입력 시 '미지정')"
+                  className="w-full bg-[#f8f8f8] rounded-2xl px-4 py-3 text-[13px] font-bold outline-none border-none focus:bg-[#f0faf4]"
+                />
+              </div>
+
               {/* 주소 검색 */}
               <div>
                 <p className="text-[12px] font-bold text-[#aaa] mb-1.5 ml-1">주소 *</p>
