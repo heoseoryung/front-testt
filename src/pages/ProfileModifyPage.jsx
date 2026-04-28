@@ -43,14 +43,12 @@ export default function ProfileModifyPage() {
   const [deletePassword, setDeletePassword]   = useState('')
   const [deleteError, setDeleteError]         = useState('')
 
+  const isSocialAccount = !!me?.profileImgUrl && !me?.updatedAt
+
   const handleDelete = async () => {
     setDeleteError('')
-    if (!deletePassword) {
-      setDeleteError('비밀번호를 입력해 주세요.')
-      return
-    }
     try {
-      await deleteAccount({ password: deletePassword }).unwrap()
+      await deleteAccount(deletePassword ? { password: deletePassword } : {}).unwrap()
       await logoutMutation()
       navigate('/')
     } catch (err) {
@@ -238,12 +236,61 @@ export default function ProfileModifyPage() {
         </div>
 
         <div className="mt-20 text-center">
-          <button className="text-[12px] font-bold text-[#ccc] hover:text-red-400 transition-colors bg-transparent border-none cursor-pointer underline underline-offset-4">
+          <button
+            onClick={() => setShowDeleteModal(true)}
+            className="text-[12px] font-bold text-[#ccc] hover:text-red-400 transition-colors bg-transparent border-none cursor-pointer underline underline-offset-4"
+          >
             회원 탈퇴하기
           </button>
         </div>
 
       </main>
+
+      {/* 회원 탈퇴 확인 모달 */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-[32px] shadow-2xl w-full max-w-[420px] mx-4 p-10">
+            <h2 className="text-[20px] font-black text-[#111] text-center mb-3 tracking-tight">정말 탈퇴하시겠어요?</h2>
+            <p className="text-[13px] font-bold text-[#aaa] text-center mb-8 leading-relaxed">
+              탈퇴 시 모든 주문 내역, 적립금, 쿠폰이<br />삭제되며 복구할 수 없습니다.
+            </p>
+
+            {!isSocialAccount && (
+              <div className="bg-[#f7f7f7] border border-[#efefef] rounded-2xl px-5 py-4 mb-4">
+                <input
+                  type="password"
+                  placeholder="현재 비밀번호를 입력해 주세요"
+                  value={deletePassword}
+                  onChange={e => setDeletePassword(e.target.value)}
+                  className="w-full bg-transparent outline-none text-[14px] font-bold text-[#111] placeholder:text-[#ccc]"
+                />
+              </div>
+            )}
+
+            {deleteError && (
+              <div className="flex items-center gap-2 px-4 py-3 bg-red-50 border border-red-100 rounded-xl mb-4">
+                <p className="text-[12px] font-bold text-red-500">{deleteError}</p>
+              </div>
+            )}
+
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="w-full h-14 bg-red-500 text-white rounded-full text-[15px] font-black hover:bg-red-600 border-none cursor-pointer transition-all active:scale-[0.97] disabled:bg-[#eee] disabled:text-[#ccc] disabled:cursor-not-allowed"
+              >
+                {isDeleting ? '처리 중...' : '탈퇴하기'}
+              </button>
+              <button
+                onClick={() => { setShowDeleteModal(false); setDeletePassword(''); setDeleteError('') }}
+                className="w-full h-14 bg-[#f7f7f7] border border-[#eee] text-[#aaa] rounded-full text-[15px] font-bold hover:bg-[#efefef] hover:text-[#888] transition-all border-none cursor-pointer"
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

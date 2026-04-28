@@ -18,7 +18,7 @@ GET /api/v1/csrf ──────►   XSRF-TOKEN 쿠키 발급 (JS readable)
 POST /auth/login ──────►   access_token  (HttpOnly 쿠키)
                             refresh_token (HttpOnly 쿠키)
 
-GET /users/me ─────────►   { data: { userId(string), name, email, phoneNumber, smsAllowed, emailAllowed, updatedAt } }
+GET /users/me ─────────►   { data: { userId(string), name, email, profileImgUrl, phoneNumber, smsAllowed, emailAllowed, updatedAt } }
 
 401 수신 → Gateway 자동 갱신 시도 → 실패 → dispatch(logout())
 ```

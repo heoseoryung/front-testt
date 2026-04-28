@@ -49,14 +49,31 @@ export default function UserProfilePage() {
         </div>
 
         <section className="bg-white rounded-[40px] border border-[#eee] p-10 mb-8 shadow-[0_10px_40px_rgba(0,0,0,0.03)]">
-          {profile?.userSummary?.membershipLevel && (
-            <span className="inline-block px-3 py-1 rounded-full text-[11px] font-black bg-[#f0faf4] text-[#3ea76e] mb-4 tracking-widest">
-              {profile.userSummary.membershipLevel}
-            </span>
-          )}
-          <h2 className="text-[26px] font-black tracking-tight text-[#111] mb-10">
-            {profile?.userSummary?.name ?? '회원'}님, 안녕하세요!
-          </h2>
+          <div className="flex items-center gap-5 mb-10">
+            <div className="w-[72px] h-[72px] rounded-full overflow-hidden bg-[#f0faf4] flex items-center justify-center shrink-0">
+              {profile?.userSummary?.profileImgUrl ? (
+                <img
+                  src={profile.userSummary.profileImgUrl}
+                  alt={profile.userSummary.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-[28px] font-black text-[#3ea76e] leading-none">
+                  {profile?.userSummary?.name?.[0] ?? '?'}
+                </span>
+              )}
+            </div>
+            <div>
+              {profile?.userSummary?.membershipLevel && (
+                <span className="inline-block px-3 py-1 rounded-full text-[11px] font-black bg-[#f0faf4] text-[#3ea76e] mb-2 tracking-widest">
+                  {profile.userSummary.membershipLevel}
+                </span>
+              )}
+              <h2 className="text-[26px] font-black tracking-tight text-[#111]">
+                {profile?.userSummary?.name ?? '회원'}님, 안녕하세요!
+              </h2>
+            </div>
+          </div>
 
           <div className="flex justify-between items-center px-4">
             {[

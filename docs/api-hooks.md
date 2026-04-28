@@ -69,15 +69,14 @@
 **Response Body (서버 원본)**
 ```json
 {
-  
-    "userId": "username123",
-    "name": "홍길동",
-    "email": "user@example.com",
-    "phoneNumber": "010-1234-5678",
-    "smsAllowed": true,
-    "emailAllowed": false,
-    "updatedAt": "2026-04-16T00:00:00"
-  
+  "userId": "username123",
+  "name": "홍길동",
+  "email": "user@example.com",
+  "profileImgUrl": "https://lh3.googleusercontent.com/a/...",
+  "phoneNumber": "010-1234-5678",
+  "smsAllowed": true,
+  "emailAllowed": false,
+  "updatedAt": "2026-04-16T00:00:00"
 }
 ```
 
@@ -87,6 +86,7 @@
   "userId": "username123",
   "name": "홍길동",
   "email": "user@example.com",
+  "profileImgUrl": "https://lh3.googleusercontent.com/a/...",
   "phoneNumber": "010-1234-5678",
   "smsAllowed": true,
   "emailAllowed": false,

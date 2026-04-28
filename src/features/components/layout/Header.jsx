@@ -103,7 +103,15 @@ export default function Header() {
         <div className="flex-shrink-0 flex justify-end gap-10 pt-1">
           <Link to={isLoggedIn ? '/mypage' : '/login'} className="flex flex-col items-center group text-[#222]">
             <div className="group-hover:text-[#3ea76e] transition-colors">
-              <User size={26} strokeWidth={1.8} />
+              {isLoggedIn && user?.profileImgUrl ? (
+                <img
+                  src={user.profileImgUrl}
+                  alt={user.name}
+                  className="w-[26px] h-[26px] rounded-full object-cover"
+                />
+              ) : (
+                <User size={26} strokeWidth={1.8} />
+              )}
             </div>
             <span className="text-[12px] font-semibold mt-1.5 opacity-80 group-hover:opacity-100 group-hover:text-[#3ea76e] transition-all max-w-[56px] truncate text-center">
               {isLoggedIn ? `${user?.name}님` : '로그인'}
