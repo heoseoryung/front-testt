@@ -147,6 +147,35 @@ export const searchApi = apiSlice.injectEndpoints({
       ],
     }),
 
+    // ── 6-1. 함께 구매 (상세 페이지용) ──────────────────────────────────────
+    /**
+     * GET /search/products/{productId}/together
+     * @param {{ productId: number, size?: number }} params  기본 size=3
+     */
+    getTogetherProducts: builder.query({
+      query: ({ productId, size = 3 }) => ({
+        url: `/search/products/${productId}/together`,
+        params: { size },
+      }),
+      transformResponse: (res) => (res.data ?? []).map((item) => ({
+        id:      item.productId,
+        name:    item.title,
+        img:     item.imageUrl,
+        tags:    item.tags    ?? [],
+        price:   item.price,
+        options: (item.options ?? []).map((o) => ({
+          optionId:     o.optionId,
+          optionName:   o.optionName,
+          extraPrice:   o.extraPrice   ?? 0,
+          initialStock: o.initialStock ?? 0,
+        })),
+        productUrl: `/product/detail/${item.productId}`,
+      })),
+      providesTags: (result, error, { productId }) => [
+        { type: 'Search', id: `TOGETHER_${productId}` },
+      ],
+    }),
+
     // ── 6. 자동완성 ──────────────────────────────────────────────────────────
     /**
      * GET /search/products/autocomplete
@@ -171,13 +200,30 @@ export const searchApi = apiSlice.injectEndpoints({
 
     // ── 8. 리뷰 검색 ─────────────────────────────────────────────────────────
     /**
-     * GET /search/reviews
+     * GET /reviews  (Search Server 담당 — /search/ 접두사 없음)
      * @param {{ productId?, keyword?, sortType?, reviewType?, page?, size? }} params
+     * sortType: 'BEST' | 그 외 최신순
+     * reviewType: 'ALL' | 'PHOTO' | 'IMAGE' | 'VIDEO' | 'TEXT'
      */
     searchReviews: builder.query({
-      query: (params = {}) => ({ url: '/search/reviews', params }),
-      transformResponse: (res) => normalizePage(res, (r) => r),
-      providesTags: [{ type: 'Search', id: 'REVIEWS' }],
+      query: (params = {}) => ({ url: '/reviews', params }),
+      transformResponse: (res) => normalizePage(res, (r) => ({
+        id:           r.reviewId      ?? r.id,
+        name:         r.writerName    ?? r.memberName ?? r.name ?? '익명',
+        date:         typeof r.createdAt === 'string'
+                        ? r.createdAt.slice(0, 10).replace(/-/g, '. ')
+                        : (r.date ?? ''),
+        views:        r.viewCount     ?? r.views ?? 0,
+        rating:       r.star          ?? r.rating ?? r.starRating ?? 0,
+        text:         r.content       ?? r.text   ?? '',
+        imgs:         r.reviewMediaUrls ?? r.imageUrls ?? r.images ?? r.imgs ?? [],
+        helpfulCount: r.likeCount     ?? r.helpfulCount ?? 0,
+        optionText:   r.optionName    ? `구매옵션: ${r.optionName}` : (r.optionText ?? ''),
+      })),
+      providesTags: (result, error, params = {}) => [
+        { type: 'Search', id: 'REVIEWS' },
+        ...(params.productId ? [{ type: 'Search', id: `REVIEWS_${params.productId}` }] : []),
+      ],
     }),
 
     // ── 9. 공지 검색 ─────────────────────────────────────────────────────────
@@ -266,13 +312,21 @@ export const searchApi = apiSlice.injectEndpoints({
 
     // ── 12. 리뷰 헤더 (평균 별점 / 총 리뷰 수 / 별점 분포) ──────────────────
     /**
-     * GET /search/reviews/header
+     * GET /reviews/header  (Search Server 담당 — /search/ 접두사 없음)
      * @param {{ productId?: number }} params
      * 응답: { avgRating, totalCount, ratingDistribution: { "5": %, ... } }
      */
     getReviewHeader: builder.query({
-      query: (params = {}) => ({ url: '/search/reviews/header', params }),
-      transformResponse: (res) => res,
+      query: (params = {}) => ({ url: '/reviews/header', params }),
+      transformResponse: (res) => ({
+        averageRating: res.avgRating   ?? 0,
+        totalCount:    res.totalCount  ?? 0,
+        distribution:  [5, 4, 3, 2, 1].map((s) => ({
+          stars: s,
+          pct:   res.ratingDistribution?.[s] ?? res.ratingDistribution?.[String(s)] ?? 0,
+        })),
+        categoryStats: [],
+      }),
       providesTags: (result, error, { productId } = {}) => [
         { type: 'Search', id: productId ? `REVIEW_HEADER_${productId}` : 'REVIEW_HEADER' },
       ],
@@ -341,6 +395,7 @@ export const {
   useGetHomeBestsellerQuery,
   useGetTastePicksQuery,
   useGetSimilarProductsQuery,
+  useGetTogetherProductsQuery,
   useGetAutocompleteQuery,
   useLazyGetAutocompleteQuery,
   useGetTrendingKeywordsQuery,

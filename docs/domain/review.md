@@ -1,6 +1,6 @@
 # Review 도메인
 
-기준일: 2026-04-16
+기준일: 2026-04-28
 
 ## 개요
 
@@ -14,7 +14,7 @@
 |---|---|---|
 | 텍스트 리뷰 적립금 | 미정 | `src/shared/utils/constants.js` → `REVIEW_POINT_TEXT` |
 | 포토 리뷰 적립금 | 미정 | `src/shared/utils/constants.js` → `REVIEW_POINT_PHOTO` |
-| 기본 페이지 크기 | 10개 | `src/shared/utils/constants.js` → `REVIEW_PAGE_SIZE` |
+| 기본 페이지 크기 | 3개 (`ReviewList`) | `ReviewList.jsx` → `PAGE_SIZE = 3` |
 | 작성 조건 | 주문 상태 `DELIVERED`인 경우만 | 서버 정책 |
 | 1주문 1리뷰 | 동일 orderId + productId 조합 1회 | 서버 정책 |
 | 내용 길이 | 최소 10자 ~ 최대 1,000자 | 클라이언트 유효성 검사 |
@@ -31,6 +31,15 @@ review
 ├── sortBy: 'createdAt'|'rating'|'helpful'
 └── pagination: { page: 1, size: REVIEW_PAGE_SIZE }
 ```
+
+> **페이지네이션 인덱싱 규칙**: `ReviewList.jsx`의 `page` 상태는 **1-indexed** (Pagination 컴포넌트 기준).
+> API 호출 시 `page - 1`로 변환하여 전달. 백엔드(Spring Data)는 **0-indexed** 를 요구한다.
+>
+> ```js
+> // page state: 1 → API: page=0 (첫 번째 페이지)
+> // page state: 2 → API: page=1 (두 번째 페이지)
+> useGetProductReviewsQuery({ productId, params: { page: page - 1, size: PAGE_SIZE } })
+> ```
 
 ---
 
@@ -120,7 +129,7 @@ const { page, size } = useAppSelector(selectReviewPagination)
 
 const { data } = useGetProductReviewsQuery({
   productId,
-  params: { sortBy, page, size },
+  params: { sortBy, page: page - 1, size },  // page는 1-indexed, API는 0-indexed
 })
 ```
 

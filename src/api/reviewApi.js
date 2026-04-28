@@ -37,90 +37,77 @@ export const reviewApi = apiSlice.injectEndpoints({
       ],
     }),
 
-    /** 상품 리뷰 통계 (평균 별점·분포·키워드) */
-    getProductReviewStats: builder.query({
-      query: (productId) => ({ url: `/products/${productId}/reviews/stats` }),
-      transformResponse: (res) => {
-        const d = res.data ?? res
-        const rawDist = d.ratingDistribution ?? {}
-        const distribution = Array.isArray(rawDist)
-          ? rawDist.map((r) => ({
-              stars: r.stars ?? r.rating ?? 0,
-              pct: r.percentage ?? r.pct ?? 0,
-            }))
-          : [5, 4, 3, 2, 1].map((s) => ({
-              stars: s,
-              pct: rawDist[s] ?? rawDist[String(s)] ?? 0,
-            }))
-        return {
-          averageRating: d.averageRating ?? d.starAverage ?? 0,
-          totalCount: d.totalCount ?? d.totalReviewAmount ?? 0,
-          distribution,
-          categoryStats: (d.categoryStats ?? []).map((c) => ({
-            label: c.label ?? c.category ?? '',
-            topAnswer: c.topAnswer ?? c.mostCommonAnswer ?? '',
-            pct: c.percentage ?? c.pct ?? 0,
-          })),
-        }
-      },
-      providesTags: (result, error, productId) => [
-        { type: 'Review', id: `STATS_${productId}` },
-      ],
-    }),
-
     /** 내 리뷰 목록 */
     getMyReviews: builder.query({
       query: (params) => ({ url: '/reviews/mine', params }),
       providesTags: [{ type: 'Review', id: 'MINE' }],
     }),
 
-    /** 리뷰 작성 */
+    /** 리뷰 상세 — GET /reviews/{publicId} */
+    getReviewById: builder.query({
+      query: (publicId) => ({ url: `/reviews/${publicId}` }),
+      transformResponse: (res) => {
+        const d = res.data ?? res
+        return {
+          publicId:        d.publicId,
+          medias:          (d.reviewMedias ?? []).map((m) => ({ url: m.url, type: m.mediaType })),
+          likeCount:       d.likeCount       ?? 0,
+          writerName:      d.writerName      ?? '',
+          star:            d.star            ?? 0,
+          preferenceScore: d.preferenceScore ?? 0,
+          repurchaseScore: d.repurchaseScore ?? 0,
+          freshnessScore:  d.freshnessScore  ?? 0,
+          content:         d.content         ?? '',
+          createdAt:       d.createAt        ?? '',
+          reportUrl:       d.reportUrl       ?? null,
+        }
+      },
+      providesTags: (result, error, publicId) => [{ type: 'Review', id: publicId }],
+    }),
+
+    /** 리뷰 작성 — POST /reviews (multipart/form-data) */
     createReview: builder.mutation({
-      query: ({ productId, reviewData }) => ({
-        url: `/products/${productId}/reviews`,
-        method: 'POST',
-        body: reviewData,
-      }),
+      query: ({ productId, star, preferenceScore, repurchaseScore, freshnessScore, content, files = [] }) => {
+        const formData = new FormData()
+        formData.append('data', JSON.stringify({ productId, star, preferenceScore, repurchaseScore, freshnessScore, content }))
+        files.forEach((file) => formData.append('files', file))
+        return { url: '/reviews', method: 'POST', body: formData }
+      },
       invalidatesTags: (result, error, { productId }) => [
         { type: 'Review', id: `PRODUCT_${productId}` },
         { type: 'Review', id: 'MINE' },
+        { type: 'Search', id: `REVIEWS_${productId}` },
       ],
     }),
 
-    /** 리뷰 수정 */
+    /** 리뷰 수정 — PUT /reviews/{publicId} (multipart/form-data) */
     updateReview: builder.mutation({
-      query: ({ reviewId, reviewData }) => ({
-        url: `/reviews/${reviewId}`,
-        method: 'PUT',
-        body: reviewData,
-      }),
-      invalidatesTags: (result, error, { reviewId }) => [
-        { type: 'Review', id: reviewId },
+      query: ({ publicId, productId, star, preferenceScore, repurchaseScore, freshnessScore, content, files = [] }) => {
+        const formData = new FormData()
+        formData.append('data', JSON.stringify({ star, preferenceScore, repurchaseScore, freshnessScore, content }))
+        files.forEach((file) => formData.append('files', file))
+        return { url: `/reviews/${publicId}`, method: 'PUT', body: formData }
+      },
+      invalidatesTags: (result, error, { publicId, productId }) => [
+        { type: 'Review', id: publicId },
         { type: 'Review', id: 'MINE' },
+        ...(productId ? [{ type: 'Search', id: `REVIEWS_${productId}` }] : []),
       ],
     }),
 
-    /** 리뷰 삭제 */
+    /** 리뷰 삭제 — DELETE /reviews/{publicId} */
     deleteReview: builder.mutation({
-      query: (reviewId) => ({
-        url: `/reviews/${reviewId}`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: (result, error, reviewId) => [
-        { type: 'Review', id: reviewId },
+      query: (publicId) => ({ url: `/reviews/${publicId}`, method: 'DELETE' }),
+      invalidatesTags: (result, error, publicId) => [
+        { type: 'Review', id: publicId },
         { type: 'Review', id: 'MINE' },
       ],
     }),
 
-    /** 도움돼요 */
+    /** 도움돼요 — POST /reviews/{publicId}/helpful */
     markReviewHelpful: builder.mutation({
-      query: (reviewId) => ({
-        url: `/reviews/${reviewId}/helpful`,
-        method: 'POST',
-      }),
-      invalidatesTags: (result, error, reviewId) => [
-        { type: 'Review', id: reviewId },
-      ],
+      query: (publicId) => ({ url: `/reviews/${publicId}/helpful`, method: 'POST' }),
+      invalidatesTags: (result, error, publicId) => [{ type: 'Review', id: publicId }],
     }),
 
     /** 홈 포토리뷰 하이라이트 (메인페이지 전용) */
@@ -147,8 +134,8 @@ export const reviewApi = apiSlice.injectEndpoints({
 
 export const {
   useGetProductReviewsQuery,
-  useGetProductReviewStatsQuery,
   useGetMyReviewsQuery,
+  useGetReviewByIdQuery,
   useCreateReviewMutation,
   useUpdateReviewMutation,
   useDeleteReviewMutation,

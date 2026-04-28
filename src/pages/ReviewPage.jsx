@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Star, Search, ChevronDown, Check } from 'lucide-react';
 import ReviewList from '../features/components/review/ReviewList';
-import { useGetProductReviewStatsQuery } from '@/api/reviewApi';
+import { useGetReviewHeaderQuery } from '@/api/searchApi';
 
 // 별점 숫자 → 한글 라벨
 const STAR_LABELS = { 5: '최고', 4: '좋음', 3: '보통', 2: '별로', 1: '나쁨' }
@@ -13,8 +13,8 @@ export default function SwiffyReviewSummary({ writeReviewState = null }) {
 
   const productId = writeReviewState?.productId
 
-  const { data: stats, isLoading: statsLoading } = useGetProductReviewStatsQuery(
-    productId,
+  const { data: stats, isLoading: statsLoading } = useGetReviewHeaderQuery(
+    { productId },
     { skip: !productId },
   )
 

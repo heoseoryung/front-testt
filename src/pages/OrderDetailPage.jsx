@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, Link } from 'react-router-dom'
 import { useGetOrderByIdQuery } from '../api/orderApi'
 import { useGetProductSummaryQuery } from '../api/productApi'
 import Spinner from '../shared/components/Spinner'
@@ -198,12 +198,15 @@ function ProductItem({ item, orderId }) {
   return (
     <div className="flex gap-10 py-10 first:pt-0">
       <div className="flex flex-col items-center gap-3 shrink-0">
-        <div className="w-32 h-32 rounded-[28px] overflow-hidden border border-[#eee] bg-[#f9f9f9]">
+        <Link
+          to={`/product/detail/${item.productId}`}
+          className="w-32 h-32 rounded-[28px] overflow-hidden border border-[#eee] bg-[#f9f9f9] block"
+        >
           {img
-            ? <img src={img} alt={item.name} className="w-full h-full object-cover" />
+            ? <img src={img} alt={item.name} className="w-full h-full object-cover hover:opacity-80 transition-opacity" />
             : <div className="w-full h-full flex items-center justify-center text-[#ccc] text-3xl">🐾</div>
           }
-        </div>
+        </Link>
         <button
           onClick={handleWriteReview}
           className="w-32 h-9 rounded-full bg-[#f5f5f5] text-[#555] font-bold text-[12px] hover:bg-[#3ea76e] hover:text-white transition-all border-none cursor-pointer"

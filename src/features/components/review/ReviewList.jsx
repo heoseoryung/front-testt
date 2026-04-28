@@ -16,7 +16,7 @@ export default function ReviewList({ writeReviewState = null }) {
   const productId = writeReviewState?.productId
 
   const { data, isLoading } = useGetProductReviewsQuery(
-    { productId, params: { page, size: PAGE_SIZE } },
+    { productId, params: { page: page - 1, size: PAGE_SIZE } },
     { skip: !productId },
   )
 

@@ -8,7 +8,7 @@ const TAG_CATEGORIES = [
   {
     key: 'preference',
     label: '기호도는 어떤가요?',
-    emoji: ':yum:',
+    emoji: '😋',
     options: [
       { value: 3, label: '잘 먹어요!' },
       { value: 2, label: '보통이에요' },
@@ -18,7 +18,7 @@ const TAG_CATEGORIES = [
   {
     key: 'repurchase',
     label: '재구매의사는 어떤가요?',
-    emoji: ':shopping_bags:',
+    emoji: '🛍️',
     options: [
       { value: 3, label: '있어요' },
       { value: 2, label: '고민 중이에요' },
@@ -28,7 +28,7 @@ const TAG_CATEGORIES = [
   {
     key: 'freshness',
     label: '신선도는 어떤가요?',
-    emoji: ':sparkles:',
+    emoji: '✨',
     options: [
       { value: 3, label: '아주 만족해요' },
       { value: 2, label: '보통이에요' },
@@ -39,9 +39,8 @@ const TAG_CATEGORIES = [
 
 /* ─── 파일 유효성 상수 ─────────────────────────────────────── */
 const TOTAL_MEDIA_MAX_COUNT = 5
-const IMAGE_MAX_SIZE_MB = 10
+const FILE_MAX_SIZE_MB = 50
 const IMAGE_ACCEPT = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg']
-const VIDEO_MAX_SIZE_MB = 500
 const VIDEO_ACCEPT = ['video/mp4', 'video/quicktime', 'video/avi', 'video/webm']
 
 export default function WriteReviewPage({ previewOnly = false, embedded = false, previewState = null }) {
@@ -89,7 +88,7 @@ export default function WriteReviewPage({ previewOnly = false, embedded = false,
     const added = []
     for (const file of files.slice(0, remaining)) {
       if (!IMAGE_ACCEPT.includes(file.type)) continue
-      if (file.size > IMAGE_MAX_SIZE_MB * 1024 * 1024) continue
+      if (file.size > FILE_MAX_SIZE_MB * 1024 * 1024) continue
       added.push({ file, previewUrl: URL.createObjectURL(file) })
     }
     setImages((prev) => [...prev, ...added])
@@ -119,8 +118,8 @@ export default function WriteReviewPage({ previewOnly = false, embedded = false,
       e.target.value = ''
       return
     }
-    if (file.size > VIDEO_MAX_SIZE_MB * 1024 * 1024) {
-      setErrors((prev) => ({ ...prev, video: `동영상 크기는 최대 ${VIDEO_MAX_SIZE_MB}MB까지 가능합니다.` }))
+    if (file.size > FILE_MAX_SIZE_MB * 1024 * 1024) {
+      setErrors((prev) => ({ ...prev, video: `동영상 크기는 최대 ${FILE_MAX_SIZE_MB}MB까지 가능합니다.` }))
       e.target.value = ''
       return
     }
@@ -154,30 +153,34 @@ export default function WriteReviewPage({ previewOnly = false, embedded = false,
       return
     }
 
-    const formData = new FormData()
-    formData.append('orderId',  orderId)
-    formData.append('rating',   rating)
-    formData.append('content',  content)
-
-    // tags[preference]=3, tags[repurchase]=2 ... 형식으로 전송
-    Object.entries(selectedTags).forEach(([key, opt]) => {
-      if (opt) formData.append(`tags[${key}]`, opt.value)
-    })
-
-    images.forEach(({ file }) => formData.append('images[]', file))
-    if (video) formData.append('video', video.file)
+    const files = [
+      ...images.map(({ file }) => file),
+      ...(video ? [video.file] : []),
+    ]
 
     try {
-      await createReview({ productId, reviewData: formData }).unwrap()
+      await createReview({
+        productId,
+        star:            rating,
+        preferenceScore: selectedTags.preference?.value ?? 0,
+        repurchaseScore: selectedTags.repurchase?.value ?? 0,
+        freshnessScore:  selectedTags.freshness?.value  ?? 0,
+        content,
+        files,
+      }).unwrap()
       navigate(-1)
-    } catch {
-      setErrors((prev) => ({ ...prev, submit: '리뷰 등록에 실패했습니다. 다시 시도해 주세요.' }))
+    } catch (err) {
+      if (err?.status === 409) {
+        setErrors((prev) => ({ ...prev, submit: '이미 해당 상품에 리뷰를 작성하셨습니다.' }))
+      } else {
+        setErrors((prev) => ({ ...prev, submit: err?.data?.message ?? '리뷰 등록에 실패했습니다. 다시 시도해 주세요.' }))
+      }
     }
   }
 
   /* ─── 렌더 ─────────────────────────────────────────────────── */
   return (
-    <div className="w-full bg-[#FCFBF9] min-h-screen pb-32 text-[#111]">
+    <div className="w-full bg-[#FCFBF9] min-h-screen text-[#111]">
 
       {/* 헤더 */}
       <header className={`${embedded ? 'rounded-t-[28px]' : 'sticky top-0'} bg-white border-b border-[#eee] z-50 px-6 py-5`}>
@@ -202,7 +205,7 @@ export default function WriteReviewPage({ previewOnly = false, embedded = false,
             <div className="w-16 h-16 rounded-[12px] overflow-hidden bg-[#FCFBF9] flex-shrink-0 border border-[#eee]">
               {productImage
                 ? <img src={productImage} alt={productName} className="w-full h-full object-cover" />
-                : <div className="w-full h-full flex items-center justify-center text-[#ccc] text-2xl">:feet:</div>
+                : <div className="w-full h-full flex items-center justify-center text-[#ccc] text-2xl">🐾</div>
               }
             </div>
             <div>
@@ -238,11 +241,11 @@ export default function WriteReviewPage({ previewOnly = false, embedded = false,
           </div>
           <p className="text-[13px] text-[#999]">
             {rating === 0 && '별점을 선택해 주세요'}
-            {rating === 1 && ':disappointed: 별로예요'}
-            {rating === 2 && ':confused: 아쉬워요'}
-            {rating === 3 && ':neutral_face: 보통이에요'}
-            {rating === 4 && ':blush: 좋아요'}
-            {rating === 5 && ':feet: 최고예요!'}
+            {rating === 1 && '😞 별로예요'}
+            {rating === 2 && '😕 아쉬워요'}
+            {rating === 3 && '😐 보통이에요'}
+            {rating === 4 && '😊 좋아요'}
+            {rating === 5 && '🐾 최고예요!'}
           </p>
           {errors.rating && (
             <p className="text-[12px] text-red-500 mt-2">{errors.rating}</p>
@@ -262,7 +265,7 @@ export default function WriteReviewPage({ previewOnly = false, embedded = false,
                   const active = selectedTags[cat.key] === opt
                   return (
                     <button
-                      key={opt}
+                      key={opt.value}
                       type="button"
                       onClick={() => toggleTag(cat.key, opt)}
                       className={`px-4 py-2 rounded-full text-[13px] font-medium border cursor-pointer transition-all
@@ -271,7 +274,7 @@ export default function WriteReviewPage({ previewOnly = false, embedded = false,
                           : 'bg-white text-[#555] border-[#ddd] hover:border-[#3ea76e] hover:text-[#3ea76e]'
                         }`}
                     >
-                      {opt}
+                      {opt.label}
                     </button>
                   )
                 })}
@@ -341,7 +344,7 @@ export default function WriteReviewPage({ previewOnly = false, embedded = false,
           </div>
 
           <p className="text-[12px] text-[#bbb] mt-3">
-            JPG · PNG · WEBP 형식, 장당 최대 10MB, 사진/동영상 합산 최대 5개
+            JPG · PNG · WEBP 형식, 장당 최대 50MB, 사진/동영상 합산 최대 5개
           </p>
           {errors.media && (
             <p className="text-[12px] text-red-500 mt-2">{errors.media}</p>
@@ -373,7 +376,7 @@ export default function WriteReviewPage({ previewOnly = false, embedded = false,
             >
               <Video className="w-7 h-7 text-[#bbb]" strokeWidth={1.5} />
               <span className="text-[13px] text-[#bbb] font-medium">동영상 추가하기</span>
-              <span className="text-[11px] text-[#ccc]">MP4 · MOV · AVI · WEBM, 최대 500MB</span>
+              <span className="text-[11px] text-[#ccc]">MP4 · MOV · AVI · WEBM, 최대 50MB</span>
             </button>
           ) : (
             <div className="relative rounded-[16px] overflow-hidden border border-[#eee] bg-black">
@@ -417,11 +420,8 @@ export default function WriteReviewPage({ previewOnly = false, embedded = false,
           <p className="text-[13px] text-red-500 text-center">{errors.submit}</p>
         )}
 
-      </main>
-
-      {/* ── 하단 고정 버튼 ─────────────────────────────────────── */}
-      <div className={`${embedded ? 'mt-6' : 'fixed bottom-0 left-0 right-0'} bg-white border-t border-[#eee] px-4 py-4 z-50`}>
-        <div className="max-w-[640px] mx-auto flex gap-3">
+        {/* ── 버튼 ───────────────────────────────────────────── */}
+        <div className="flex gap-3 pb-6">
           <button
             type="button"
             onClick={() => !previewOnly && navigate(-1)}
@@ -438,7 +438,8 @@ export default function WriteReviewPage({ previewOnly = false, embedded = false,
             {isLoading ? '등록 중...' : '리뷰 등록하기'}
           </button>
         </div>
-      </div>
+
+      </main>
 
     </div>
   )
