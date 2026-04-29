@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
+import { BRAND_NAME } from '@/shared/utils/constants'
 import { Mail, Lock, Eye, EyeOff, User, Phone, X, AtSign, CheckCircle, ChevronRight, AlertCircle } from 'lucide-react'
 import useSignupForm from './useSignupForm'
 import useEmailVerify from './useEmailVerify'
@@ -219,7 +220,7 @@ export default function SignupPage() {
                 <span className="text-[#1B4332]">전해지는 진심.</span>
               </h1>
               <p className="text-[18px] text-white/70 font-bold tracking-tight max-w-xs leading-relaxed">
-                스위피와 함께 만드는 <br /> 우리 아이와의 깊은 기록.
+                {BRAND_NAME}와 함께 만드는 <br /> 우리 아이와의 깊은 기록.
               </p>
             </div>
           </div>

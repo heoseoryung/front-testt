@@ -1,6 +1,6 @@
 # 프로젝트 구조
 
-기준일: 2026-04-29 (UserCouponPage·UserPointPage 삭제 / 쿠폰·적립금·정기배송 제거 / FaqPage·FaqDetailPage 추가 / pages/LoginPage·SignupPage 미사용 파일 삭제)
+기준일: 2026-04-29 (UserCouponPage·UserPointPage 삭제 / 쿠폰·적립금·정기배송 제거 / FaqPage·FaqDetailPage 추가 / pages/LoginPage·SignupPage 미사용 파일 삭제 / BRAND_NAME·BRAND_COMPANY 상수 추가 / 브랜드명 'enum' 일괄 교체)
 
 ---
 
@@ -99,7 +99,7 @@ src/
 │   │   ├── Pagination.jsx
 │   │   └── Spinner.jsx
 │   └── utils/
-│       ├── constants.js          공통 상수 (PRODUCT_PAGE_SIZE, NOTICE_PAGE_SIZE, NOTICE_SEARCH_RANGES, NOTICE_SEARCH_TYPES)
+│       ├── constants.js          공통 상수 (BRAND_NAME, BRAND_COMPANY, PRODUCT_PAGE_SIZE, NOTICE_PAGE_SIZE, NOTICE_SEARCH_RANGES, NOTICE_SEARCH_TYPES)
 │       ├── formatters.js         숫자·날짜 포맷, 금액 계산 순수 함수
 │       └── oauth2.js             소셜 로그인 state nonce 생성
 │

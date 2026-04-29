@@ -1,6 +1,30 @@
 # UI 도메인
 
-기준일: 2026-04-29
+기준일: 2026-04-29 (BRAND_NAME·BRAND_COMPANY 상수 추가 / 브랜드명 enum 일괄 교체)
+
+## 브랜드 상수
+
+브랜드명은 `src/shared/utils/constants.js`에서 중앙 관리한다. 브랜드명 변경 시 이 두 줄만 수정하면 전체 반영된다.
+
+```js
+export const BRAND_NAME    = 'enum'       // 브랜드명 (단독 표기)
+export const BRAND_COMPANY = '(주)enum'   // 법인명 (Footer·약관 등)
+```
+
+### 적용 범위
+
+| 파일 | 사용 상수 |
+|---|---|
+| `TermsPage.jsx` | `BRAND_NAME` (template literal 전체) |
+| `PrivacyPage.jsx` | `BRAND_COMPANY` |
+| `Footer.jsx` | `BRAND_COMPANY` (회사명·Copyright) |
+| `CSPage.jsx` | `BRAND_NAME` (AI 상담 설명, NOTICE 설명) |
+| `BrandStoryPage.jsx` | `BRAND_NAME` (본문 6곳) |
+| `LoginPage.jsx` | `BRAND_NAME` (소개 문구, 버튼 텍스트) |
+| `SignupPage.jsx` | `BRAND_NAME` (소개 문구) |
+| `ProductDetailPage.jsx` | `BRAND_NAME` (교환/반품 안내) |
+
+---
 
 ## 개요
 

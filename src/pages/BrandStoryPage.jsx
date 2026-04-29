@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { BRAND_NAME } from '@/shared/utils/constants'
 import { useGetBrandStoryDetailQuery } from '@/api/searchApi'
 import Spinner from '@/shared/components/Spinner'
 
@@ -75,22 +76,22 @@ export default function BrandStoryPage() {
             <div className="mb-10 relative">
               <span className="text-6xl absolute -top-10 -left-1 font-serif text-[#3ea76e] opacity-30">"</span>
               <h2 className="text-2xl font-bold leading-tight relative text-[#3ea76e]">
-                스위피는
+                {BRAND_NAME}는
               </h2>
             </div>
 
             <div className="space-y-6 text-[#555] leading-relaxed text-[15px]">
               <p>
-                스위피는 이런 반려동물 친구들과 매일매일<br />
+                {BRAND_NAME}는 이런 반려동물 친구들과 매일매일<br />
                 행복한 교감을 만들어 나가기 위해 만들어졌습니다.<br />
                 한결 같이 나를 바라봐주는 존재에게 내가 할 수 있는<br />
-                최고의 것을 주고 싶다는 마음이 바로 스위피의 시작입니다.<br />
-                반려동물의 라이프스타일 전반을 지향하는 스위피가<br />
+                최고의 것을 주고 싶다는 마음이 바로 {BRAND_NAME}의 시작입니다.<br />
+                반려동물의 라이프스타일 전반을 지향하는 {BRAND_NAME}가<br />
                 첫 번째 제품 카테고리로 먹거리를 선택한 것도 먹는 즐거움이<br />
                 서로간의 교감을 나눌 수 있는 가장 좋은 방법이기 때문입니다.<br />
-                그래서 스위피의 메뉴는 우리 반려동물 친구를 위해<br />
+                그래서 {BRAND_NAME}의 메뉴는 우리 반려동물 친구를 위해<br />
                 내가 직접 집에서 만들어줄 수 있는 요리로 만들었습니다.<br />
-                건강하고 맛있는 스위피 제품들 덕분에<br />
+                건강하고 맛있는 {BRAND_NAME} 제품들 덕분에<br />
                 우리 반려동물 친구들에게 근사한 다이닝을 대접해주세요.<br />
                 맛있게 먹는 반려동물 친구들을 보면 바쁘고 정신없는 일상 중이라도<br />
                 소소한 여유와 행복을 느끼실 수 있을 거예요.

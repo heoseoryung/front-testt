@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
+import { BRAND_NAME } from '@/shared/utils/constants'
 import { Mail, Lock, Eye, EyeOff, X, MessageCircle, AlertCircle, CheckCircle } from 'lucide-react'
 import useLoginForm from './useLoginForm'
 
@@ -47,7 +48,7 @@ export default function LoginPage() {
                 <span className="text-[#1B4332]">전해지는 진심.</span>
               </h1>
               <p className="text-[18px] text-white/70 font-bold tracking-tight max-w-xs leading-relaxed">
-                스위피와 함께 만드는 <br /> 우리 아이와의 깊은 기록.
+                {BRAND_NAME}와 함께 만드는 <br /> 우리 아이와의 깊은 기록.
               </p>
             </div>
           </div>
@@ -121,7 +122,7 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full h-14 rounded-2xl bg-[#3ea76e] text-white font-black text-[15px] tracking-tight hover:bg-[#318a57] transition-all active:scale-[0.98] cursor-pointer border-none disabled:bg-[#eee] disabled:text-[#ccc] disabled:cursor-not-allowed"
             >
-              {isLoading ? '로그인 중...' : '스위피 시작하기'}
+              {isLoading ? '로그인 중...' : `${BRAND_NAME} 시작하기`}
             </button>
           </div>
 

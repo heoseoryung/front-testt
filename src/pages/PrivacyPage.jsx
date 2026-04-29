@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom'
+import { BRAND_COMPANY } from '@/shared/utils/constants'
 
 export default function PrivacyPage() {
   const navigate = useNavigate()
-  const privacyText = `(주)스위피(이하 "회사")는 "정보통신망 이용촉진 및 정보보호 등에 관한 법률" 등 관련 법령을 준수하며, 이용자의 개인정보를 소중히 취급하고 안전하게 관리하기 위해 최선을 다하고 있습니다.
+  const privacyText = `${BRAND_COMPANY}(이하 "회사")는 "정보통신망 이용촉진 및 정보보호 등에 관한 법률" 등 관련 법령을 준수하며, 이용자의 개인정보를 소중히 취급하고 안전하게 관리하기 위해 최선을 다하고 있습니다.
 
 ■ 수집하는 개인정보의 항목 및 수집방법
 가. 수집하는 개인정보 항목

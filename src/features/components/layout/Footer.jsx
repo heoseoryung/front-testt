@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { BRAND_COMPANY } from '@/shared/utils/constants'
 
 export default function Footer() {
   return (
@@ -38,7 +39,7 @@ export default function Footer() {
         <div className="flex flex-col lg:flex-row justify-between items-start gap-10">
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-[12px] text-[#888] max-w-[1000px] leading-relaxed">
             {[
-              ['COMPANY', '(주)스위피'],
+              ['COMPANY', BRAND_COMPANY],
               ['CEO', '김정환, 임진범'],
               ['BUSINESS NO.', '707-86-02078'],
               ['REPORT NO.', '2023-인천서구-1429호'],
@@ -70,7 +71,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 pt-6 border-t border-[#f9f9f9] flex flex-col md:flex-row justify-between gap-4">
-          <p className="text-[11px] text-[#ccc] tracking-wide">Copyright © (주)스위피 All rights Reserved.</p>
+          <p className="text-[11px] text-[#ccc] tracking-wide">Copyright © {BRAND_COMPANY} All rights Reserved.</p>
           <p className="text-[11px] text-[#eee]">Designed by hosting by cafe24</p>
         </div>
       </div>

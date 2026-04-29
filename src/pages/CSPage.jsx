@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { BRAND_NAME } from '@/shared/utils/constants'
 import { Link } from 'react-router-dom'
 import {
   ChevronRight, Headphones, MessageSquare, Info,
@@ -112,7 +113,7 @@ const CSPage = () => {
                 <Bot size={18} className="text-[#3ea76e]" strokeWidth={2.5} />
                 <h2 className="text-[#3ea76e] text-[13px] font-black uppercase tracking-widest">AI 상담</h2>
               </div>
-              <p className="text-[15px] font-bold text-[#888] tracking-tight">스위피 AI가 궁금하신 점을 도와드립니다.</p>
+              <p className="text-[15px] font-bold text-[#888] tracking-tight">{BRAND_NAME} AI가 궁금하신 점을 도와드립니다.</p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <button
@@ -233,7 +234,7 @@ const CSPage = () => {
 
           <div className="grid grid-cols-1 gap-4">
             {[
-              { title: 'NOTICE', link: '/notice', icon: <Info size={20} className="text-[#ccc] group-hover:text-[#3ea76e] transition-colors" />, desc: '스위피의 새로운 소식을 확인하세요.' },
+              { title: 'NOTICE', link: '/notice', icon: <Info size={20} className="text-[#ccc] group-hover:text-[#3ea76e] transition-colors" />, desc: `${BRAND_NAME}의 새로운 소식을 확인하세요.` },
               { title: 'FAQ', link: '/faq', icon: <MessageSquare size={20} className="text-[#ccc] group-hover:text-[#3ea76e] transition-colors" />, desc: '자주 묻는 질문들을 모아두었습니다.' },
             ].map((item, index) => (
               <Link
