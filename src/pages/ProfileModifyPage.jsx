@@ -1,24 +1,41 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { AlertCircle, CheckCircle } from 'lucide-react'
+import { AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react'
 import { useGetMeQuery, useLogoutMutation } from '@/api/authApi'
 import { useUpdateProfileMutation, useDeleteAccountMutation } from '@/api/userApi'
 import Spinner from '@/shared/components/Spinner'
 
-const EumInput = ({ label, readOnly, ...props }) => (
-  <div className="flex items-center border-b border-[#ececec] py-6 last:border-none">
-    <p className="w-36 text-[13px] font-black text-[#bbb] shrink-0">{label}</p>
-    <input
-      {...props}
-      readOnly={readOnly}
-      className={`flex-1 bg-transparent outline-none text-[15px] font-bold tracking-tight transition-all placeholder:text-[#ccc] ${
-        readOnly
-          ? 'text-[#ccc] cursor-default'
-          : 'text-[#111] focus:text-[#3ea76e]'
-      }`}
-    />
-  </div>
-)
+const EumInput = ({ label, readOnly, type, ...props }) => {
+  const [showPw, setShowPw] = useState(false)
+  const isPassword = type === 'password'
+
+  return (
+    <div className="flex items-center border-b border-[#ececec] py-6 last:border-none">
+      <p className="w-36 text-[13px] font-black text-[#bbb] shrink-0">{label}</p>
+      <div className="flex-1 flex items-center gap-2">
+        <input
+          {...props}
+          type={isPassword ? (showPw ? 'text' : 'password') : (type ?? 'text')}
+          readOnly={readOnly}
+          className={`flex-1 bg-transparent outline-none text-[15px] font-bold tracking-tight transition-all placeholder:text-[#ccc] ${
+            readOnly
+              ? 'text-[#ccc] cursor-default'
+              : 'text-[#111] focus:text-[#3ea76e]'
+          }`}
+        />
+        {isPassword && !readOnly && (
+          <button
+            type="button"
+            onClick={() => setShowPw(v => !v)}
+            className="text-[#bbb] hover:text-[#3ea76e] cursor-pointer bg-transparent border-none transition-colors shrink-0"
+          >
+            {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
 
 export default function ProfileModifyPage() {
   const navigate = useNavigate()
@@ -42,6 +59,7 @@ export default function ProfileModifyPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deletePassword, setDeletePassword]   = useState('')
   const [deleteError, setDeleteError]         = useState('')
+  const [showDeletePw, setShowDeletePw]       = useState(false)
 
   const isSocialAccount = !!me?.profileImgUrl && !me?.updatedAt
 
@@ -256,14 +274,21 @@ export default function ProfileModifyPage() {
             </p>
 
             {!isSocialAccount && (
-              <div className="bg-[#f7f7f7] border border-[#efefef] rounded-2xl px-5 py-4 mb-4">
+              <div className="bg-[#f7f7f7] border border-[#efefef] rounded-2xl px-5 py-4 mb-4 flex items-center gap-2">
                 <input
-                  type="password"
+                  type={showDeletePw ? 'text' : 'password'}
                   placeholder="현재 비밀번호를 입력해 주세요"
                   value={deletePassword}
                   onChange={e => setDeletePassword(e.target.value)}
-                  className="w-full bg-transparent outline-none text-[14px] font-bold text-[#111] placeholder:text-[#ccc]"
+                  className="flex-1 bg-transparent outline-none text-[14px] font-bold text-[#111] placeholder:text-[#ccc]"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowDeletePw(v => !v)}
+                  className="text-[#bbb] hover:text-[#3ea76e] cursor-pointer bg-transparent border-none transition-colors shrink-0"
+                >
+                  {showDeletePw ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
             )}
 
@@ -282,7 +307,7 @@ export default function ProfileModifyPage() {
                 {isDeleting ? '처리 중...' : '탈퇴하기'}
               </button>
               <button
-                onClick={() => { setShowDeleteModal(false); setDeletePassword(''); setDeleteError('') }}
+                onClick={() => { setShowDeleteModal(false); setDeletePassword(''); setDeleteError(''); setShowDeletePw(false) }}
                 className="w-full h-14 bg-[#f7f7f7] border border-[#eee] text-[#aaa] rounded-full text-[15px] font-bold hover:bg-[#efefef] hover:text-[#888] transition-all border-none cursor-pointer"
               >
                 취소

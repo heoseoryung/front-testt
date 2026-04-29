@@ -196,7 +196,7 @@ function ProductItem({ item, orderId }) {
   }
 
   return (
-    <div className="flex gap-10 py-10 first:pt-0">
+    <div className="flex gap-14 py-10 first:pt-0">
       <div className="flex flex-col items-center gap-3 shrink-0">
         <Link
           to={`/product/detail/${item.productId}`}
