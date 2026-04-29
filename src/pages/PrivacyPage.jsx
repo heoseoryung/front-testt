@@ -58,7 +58,7 @@ export default function PrivacyPage() {
 ■ 개인정보 보호책임자
 회사는 고객의 개인정보를 보호하고 개인정보와 관련한 불만을 처리하기 위하여 아래와 같이 관련 부서 및 개인정보 보호책임자를 지정하고 있습니다.
 - 개인정보 보호책임자: 임진범
-- 이메일: swiffy@swiffy.co.kr`;
+- 이메일: eum@eum.co.kr`;
 
   return (
     <div className="bg-[#FCFBF9] min-h-screen font-sans text-[#111] pb-32">

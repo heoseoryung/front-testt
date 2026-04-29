@@ -1,6 +1,6 @@
 # 프로젝트 구조
 
-기준일: 2026-04-29 (UserCouponPage·UserPointPage 삭제 / 쿠폰·적립금·정기배송 제거 / FaqPage·FaqDetailPage 추가 / pages/LoginPage·SignupPage 미사용 파일 삭제 / BRAND_NAME·BRAND_COMPANY 상수 추가 / 브랜드명 'enum' 일괄 교체)
+기준일: 2026-04-29 (UserCouponPage·UserPointPage 삭제 / 쿠폰·적립금·정기배송 제거 / FaqPage·FaqDetailPage 추가 / pages/LoginPage·SignupPage 미사용 파일 삭제 / BRAND_NAME·BRAND_COMPANY 상수 추가 / 브랜드명 'eum' 일괄 교체)
 
 ---
 

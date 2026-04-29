@@ -93,7 +93,7 @@ export default function Header() {
         <div className="flex-shrink-0">
           <Link to="/" className="inline-flex items-center">
             <div className="text-[#3ea76e] text-[42px] font-black tracking-[-0.05em] leading-none">
-              SWIFFY<span className="text-[14px] align-top ml-1 opacity-80 italic">®</span>
+              eum<span className="text-[14px] align-top ml-1 opacity-80 italic">®</span>
             </div>
           </Link>
         </div>

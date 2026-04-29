@@ -5,7 +5,7 @@ import { useAddCartItemMutation } from '../api/cartApi'
 import { useAddWishlistItemMutation } from '../api/wishlistApi'
 import { useAppDispatch } from '../hooks/useAppDispatch'
 import { initCheckedItems } from '../features/cart/cartSlice'
-import SwiffyReviewSummary from './ReviewPage'
+import EumReviewSummary from './ReviewPage'
 import { useGetProductReviewsQuery } from '../api/reviewApi'
 import Toast from '../features/components/ui/Toast'
 import Spinner from '../shared/components/Spinner'
@@ -102,7 +102,7 @@ function TabContent({ activeTab, product, setActiveTab }) {
         </div>
       )}
       {(activeTab === 'review' || activeTab === 'review-all') && (
-        <SwiffyReviewSummary
+        <EumReviewSummary
           writeReviewState={{
             productId: product.id,
             productName: product.name,

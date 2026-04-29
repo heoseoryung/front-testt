@@ -18,8 +18,8 @@ export default function Footer() {
 
           <div className="flex gap-6">
             {[
-              { label: 'INSTAGRAM', href: 'https://www.instagram.com/swiffy.co.kr/' },
-              { label: 'YOUTUBE', href: 'https://www.youtube.com/@swiffy1748' },
+              { label: 'INSTAGRAM', href: 'https://www.instagram.com/eum.co.kr/' },
+              { label: 'YOUTUBE', href: 'https://www.youtube.com/@eum' },
             ].map((item) => (
               <a
                 key={item.label}
@@ -45,7 +45,7 @@ export default function Footer() {
               ['REPORT NO.', '2023-인천서구-1429호'],
               ['PRIVACY MANAGER', '임진범'],
               ['ADDRESS', '22664 인천광역시 서구 보듬로 158 (오류동) 공존동 4층 430호'],
-              ['E-MAIL', 'swiffy@swiffy.co.kr'],
+              ['E-MAIL', 'eum@eum.co.kr'],
             ].map(([label, value]) => (
               <div key={label} className="flex gap-2">
                 <span className="font-bold text-[#666] shrink-0">{label}</span>

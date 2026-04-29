@@ -39,7 +39,7 @@ export default function BrandStory() {
 
       <div className="px-1">
         <h3 className="text-[20px] font-black text-[#111111] tracking-tighter mb-2">
-          반려동물과의 행복한 교감, SWIFFY
+          반려동물과의 행복한 교감, eum
         </h3>
         <p className="text-[14px] text-[#888888] leading-relaxed tracking-tight mb-6">
           한결같이 나를 바라봐주는 존재에게<br />

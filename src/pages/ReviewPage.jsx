@@ -6,7 +6,7 @@ import { useGetReviewHeaderQuery } from '@/api/searchApi';
 // 별점 숫자 → 한글 라벨
 const STAR_LABELS = { 5: '최고', 4: '좋음', 3: '보통', 2: '별로', 1: '나쁨' }
 
-export default function SwiffyReviewSummary({ writeReviewState = null }) {
+export default function EumReviewSummary({ writeReviewState = null }) {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState('');

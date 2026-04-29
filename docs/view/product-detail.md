@@ -13,7 +13,7 @@
 | 탭 key | 라벨 | 콘텐츠 |
 |---|---|---|
 | `detail` | 상세정보 | `product.detailImgs` 이미지 목록 |
-| `review` | 사용후기 (N) | `ReviewPage` (`SwiffyReviewSummary`) |
+| `review` | 사용후기 (N) | `ReviewPage` (`EumReviewSummary`) |
 | `qna` | 제품문의 | 미구현 (빈 상태 메시지) |
 | `info` | 배송/교환/반품 | 정책 텍스트 |
 

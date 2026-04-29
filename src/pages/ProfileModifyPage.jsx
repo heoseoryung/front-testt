@@ -5,7 +5,7 @@ import { useGetMeQuery, useLogoutMutation } from '@/api/authApi'
 import { useUpdateProfileMutation, useDeleteAccountMutation } from '@/api/userApi'
 import Spinner from '@/shared/components/Spinner'
 
-const SwiffyInput = ({ label, readOnly, ...props }) => (
+const EumInput = ({ label, readOnly, ...props }) => (
   <div className="flex items-center border-b border-[#ececec] py-6 last:border-none">
     <p className="w-36 text-[13px] font-black text-[#bbb] shrink-0">{label}</p>
     <input
@@ -131,27 +131,27 @@ export default function ProfileModifyPage() {
           </div>
 
           <div className="bg-[#f7f7f7] px-8 rounded-[24px] border border-[#efefef]">
-            <SwiffyInput
+            <EumInput
               label="이메일"
               value={me?.email ?? ''}
               readOnly
               placeholder="이메일"
             />
-            <SwiffyInput
+            <EumInput
               label="현재 비밀번호"
               type="password"
               placeholder="현재 비밀번호 입력"
               value={form.currentPassword}
               onChange={e => set('currentPassword', e.target.value)}
             />
-            <SwiffyInput
+            <EumInput
               label="새 비밀번호"
               type="password"
               placeholder="8~20자, 대소문자+숫자+특수문자"
               value={form.newPassword}
               onChange={e => set('newPassword', e.target.value)}
             />
-            <SwiffyInput
+            <EumInput
               label="비밀번호 확인"
               type="password"
               placeholder="새 비밀번호 재입력"
@@ -167,14 +167,14 @@ export default function ProfileModifyPage() {
             <h3 className="text-[18px] font-black text-[#111] tracking-tight text-center">사용자 정보</h3>
           </div>
           <div className="bg-[#f7f7f7] px-8 rounded-[24px] border border-[#efefef]">
-            <SwiffyInput
+            <EumInput
               label="이름"
               type="text"
               value={form.name}
               onChange={e => set('name', e.target.value)}
               placeholder="이름을 입력해주세요"
             />
-            <SwiffyInput
+            <EumInput
               label="휴대폰 번호"
               type="tel"
               value={form.phoneNumber}

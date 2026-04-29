@@ -89,7 +89,7 @@ Header (sticky)
 ```
 결제하기 클릭
  ├─ 유효성 검사 (받는사람 · 주소 · 휴대폰)
- ├─ POST /orders  →  orderId 발급
+ ├─ POST /orders/subject  →  orderId 발급 (text/plain, user_id 미포함)
  ├─ POST /payments/prepare  →  백엔드 결제 레코드 생성
  ├─ widgets.setAmount()  →  Toss 위젯 금액 동기화
  └─ widgets.requestPayment()
