@@ -27,7 +27,10 @@
       "Bash(git checkout *)",
       "Bash(git rm *)",
       "Bash(git restore *)",
-      "Bash(git show:*)"
+      "Bash(git show:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(npx eslint:*)",
+      "Bash(node --input-type=module)"
     ]
   }
 }

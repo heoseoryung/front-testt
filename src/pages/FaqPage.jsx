@@ -10,7 +10,7 @@ export default function FaqPage() {
   const [page, setPage]         = useState(1) // 1-based (Pagination 컴포넌트 기준)
   const [keyword, setKeyword]   = useState('')
   const [inputValue, setInput]  = useState('')
-  const [searchRange, setRange] = useState(NOTICE_SEARCH_RANGES[0].value) // '일주일'
+  const [searchRange, setRange] = useState('전체') // FAQ는 상시 콘텐츠 — 전체 기간 기본값
   const [searchType, setType]   = useState(NOTICE_SEARCH_TYPES[0].value)  // '제목'
 
   const { data, isLoading, isError } = useSearchFaqsQuery({
