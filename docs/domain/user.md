@@ -185,25 +185,9 @@
 
 모든 마이페이지 경로는 `ProtectedRoute`로 보호된다.
 
-<<<<<<< HEAD
-=======
 ---
 
-## UserProfilePage 구성
-
-### 프로필 섹션 (`/mypage` 상단 카드)
-
-```
-[프로필 이미지 100×100] [멤버십 등급 배지 (선택)]
-                        [인사말 텍스트  |  주문내역 N건]
-```
-
-| 항목 | 현재 값 |
-|---|---|
-| 레이아웃 | 가로 (`flex flex-row items-center gap-6`) — 이미지 좌측, 텍스트 우측 |
-| 이미지 크기 | 100×100px |
-| 이니셜 텍스트 | 36px |
-| 주문내역 | 인사말과 동일 행 (`flex items-center gap-6`) — `profile.benefits.orderTotalCount` |
+## UserProfilePage 메뉴 구성
 
 ### 계정 및 서비스 관리 메뉴
 
@@ -216,4 +200,3 @@
 
 > 주문조회 메뉴는 제거됨 — `/order/list` 경로는 헤더 아이콘으로만 접근.  
 > 최근 주문 내역 섹션(배송 상태 그리드·취소/교환/반품 카운트)은 제거됨.
->>>>>>> edd89ad4f89f1e1d8623b10baf50eecbe2a653e0
