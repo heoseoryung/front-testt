@@ -101,7 +101,7 @@ src/
 │   └── utils/
 │       ├── constants.js          공통 상수 (BRAND_NAME, BRAND_COMPANY, PRODUCT_PAGE_SIZE, NOTICE_PAGE_SIZE, NOTICE_SEARCH_RANGES, NOTICE_SEARCH_TYPES)
 │       ├── formatters.js         숫자·날짜 포맷, 금액 계산 순수 함수
-│       └── oauth2.js             소셜 로그인 state nonce 생성
+│       └── oauth2.js             소셜 로그인 시작 (startSocialLogin — 백엔드 OAuth2 엔드포인트로 리다이렉트)
 │
 ├── store/
 │   └── store.js                  configureStore (Redux Toolkit)

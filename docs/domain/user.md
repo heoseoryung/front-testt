@@ -185,12 +185,3 @@
 
 모든 마이페이지 경로는 `ProtectedRoute`로 보호된다.
 
----
-
-## UserProfilePage 프로필 섹션 UI
-
-| 항목 | 이전 | 현재 |
-|---|---|---|
-| 레이아웃 | 가로 (`flex items-center`) — 이미지 좌측, 이름 우측 | 세로 중앙 (`flex flex-col items-center`) |
-| 이미지 크기 | 72×72px | 100×100px |
-| 이니셜 텍스트 | 28px | 36px |

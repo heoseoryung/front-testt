@@ -254,5 +254,5 @@ if (action.type === logout.type) {
 ## OAuth2 소셜 로그인
 
 - 프론트는 `/oauth2/authorization/{provider}`로 리다이렉트만 수행
-- `state` nonce: `generateOAuth2State()` 생성 → sessionStorage 임시 저장 (콜백 검증 후 즉시 삭제)
+- 백엔드가 OAuth2 전체 처리 → HttpOnly 쿠키 발급 → SPA로 리다이렉트 → `AuthInitializer`의 `useGetMeQuery()` 자동 실행
 - Client ID · Secret 코드 포함 절대 금지 (**No OAuth Secret**)
