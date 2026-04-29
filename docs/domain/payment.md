@@ -1,6 +1,6 @@
 # Payment 도메인
 
-기준일: 2026-04-24
+기준일: 2026-04-29
 
 ## 개요
 
@@ -328,7 +328,7 @@ await widgets.requestPayment({
 ## 프론트 연동 흐름
 
 ```
-1. createOrder              → POST /orders/get                  → orderId (Long) 획득
+1. createOrder              → POST /orders/subject               → orderId (Long) 획득
 2. preparePayment           → POST /payments/prepare            → 결제 레코드 생성 (status: READY)
 3. requestPayment           → Toss 위젯 호출 (orderId: `order-${orderId}`)  → 사용자 결제 진행
 4. successUrl 리다이렉트    → /payment/success?paymentKey=...&orderId=order-{id}&amount=...

@@ -19,8 +19,6 @@ import PaymentFailPage from './pages/PaymentFailPage'
 import UserProfilePage from './pages/UserProfilePage'
 import ProfileModifyPage from './pages/ProfileModifyPage'
 import WishListPage from './pages/WishListPage'
-import UserCouponPage from './pages/UserCouponPage'
-import UserPointPage from './pages/UserPointPage'
 import UserAddressPage from './pages/UserAddressPage '
 import WriteReviewPage from './pages/WriteReviewPage'
 import ReviewPage from './pages/ReviewPage'
@@ -57,8 +55,6 @@ export default function Router() {
             <Route path="/mypage" element={<ProtectedRoute><UserProfilePage /></ProtectedRoute>} />
             <Route path="/profile/modify" element={<ProtectedRoute><ProfileModifyPage /></ProtectedRoute>} />
             <Route path="/wishlist" element={<ProtectedRoute><WishListPage /></ProtectedRoute>} />
-            <Route path="/coupon" element={<ProtectedRoute><UserCouponPage /></ProtectedRoute>} />
-            <Route path="/point" element={<ProtectedRoute><UserPointPage /></ProtectedRoute>} />
             <Route path="/address" element={<ProtectedRoute><UserAddressPage /></ProtectedRoute>} />
             <Route path="/review/write" element={<ProtectedRoute><WriteReviewPage /></ProtectedRoute>} />
 

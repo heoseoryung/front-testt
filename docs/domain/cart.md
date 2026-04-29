@@ -1,7 +1,7 @@
 # CartServer API 명세서
 
 > Base URL: `https://localhost:8072/api/v1/cart`
-> 기준일: 2026-04-24 (확정)
+> 기준일: 2026-04-29
 
 ---
 

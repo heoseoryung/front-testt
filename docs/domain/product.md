@@ -1,5 +1,7 @@
 # Product Server API 수정본
 
+기준일: 2026-04-29
+
 > Base URL: `https://localhost:8072/api/v1/product`
 
 --

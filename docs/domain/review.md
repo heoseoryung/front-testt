@@ -1,6 +1,6 @@
 # Review 도메인
 
-기준일: 2026-04-28 (최종수정)
+기준일: 2026-04-29
 
 ## 개요
 
@@ -12,8 +12,6 @@
 
 | 정책 | 값 | 코드 위치 |
 |---|---|---|
-| 텍스트 리뷰 적립금 | 미정 | `src/shared/utils/constants.js` → `REVIEW_POINT_TEXT` |
-| 포토 리뷰 적립금 | 미정 | `src/shared/utils/constants.js` → `REVIEW_POINT_PHOTO` |
 | 기본 페이지 크기 | 3개 (`ReviewList`) | `ReviewList.jsx` → `PAGE_SIZE = 3` |
 | 작성 조건 | 주문 상태 `DELIVERED`인 경우만 | 서버 정책 |
 | 1주문 1리뷰 | 동일 orderId + productId 조합 1회 | 서버 정책 |

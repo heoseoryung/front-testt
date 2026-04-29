@@ -1,6 +1,6 @@
 # User 도메인
 
-기준일: 2026-04-28
+기준일: 2026-04-29
 
 ## 개요
 
@@ -18,7 +18,7 @@
 
 | 훅 | 메서드 | 경로 | 설명 |
 |---|---|---|---|
-| `useGetProfileQuery()` | GET | `/users/profile` | 마이페이지 집계 데이터 (적립금·쿠폰 수·주문 건수 등) |
+| `useGetProfileQuery()` | GET | `/users/profile` | 마이페이지 집계 데이터 (주문 건수·찜·게시글 수 등) |
 | `useUpdateProfileMutation` | PUT | `/users/profile` | 회원정보 수정 (비밀번호·이름·전화번호·마케팅 동의) |
 | `useDeleteAccountMutation` | DELETE | `/users` | 회원 탈퇴 — `body: { password }` |
 
@@ -57,8 +57,6 @@
     "membershipLevel": "일반회원"
   },
   "benefits": {
-    "points": 0,
-    "couponCount": 0,
     "orderTotalCount": 3
   },
   "orderStatusSummary": {
@@ -77,14 +75,13 @@
   },
   "activityCounts": {
     "wishlistCount": 0,
-    "postCount": 0,
-    "regularDeliveryCount": 0
+    "postCount": 0
   }
 }
 ```
 
-> 컴포넌트 접근 경로 예시: `profile.userSummary.name`, `profile.benefits.points`, `profile.orderStatusSummary.mainStatuses.pendingPayment`  
-> 쿠폰·주문 상태·찜·게시글·정기배송 수는 현재 서버 기본값 `0`.
+> 컴포넌트 접근 경로 예시: `profile.userSummary.name`, `profile.benefits.orderTotalCount`, `profile.orderStatusSummary.mainStatuses.pendingPayment`  
+> 주문 상태·찜·게시글 수는 현재 서버 기본값 `0`.
 
 ### PUT /users/profile 요청 바디
 
@@ -183,8 +180,6 @@
 | `/mypage` | `UserProfilePage` | 마이페이지 대시보드 |
 | `/profile/modify` | `ProfileModifyPage` | 회원정보 수정 |
 | `/wishlist` | `WishListPage` | 관심상품 목록 |
-| `/coupon` | `UserCouponPage` | 쿠폰 목록 |
-| `/point` | `UserPointPage` | 적립금 내역 |
 | `/address` | `UserAddressPage` | 배송지 관리 |
 | `/order/list` | `OrderPage` | 주문 목록 |
 

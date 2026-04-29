@@ -1,6 +1,6 @@
 # 프로젝트 구조
 
-기준일: 2026-04-28 (ragApi 추가 / constants.js 부분 구현 / /review/write 보호 라우트로 변경)
+기준일: 2026-04-29 (UserCouponPage·UserPointPage 삭제 / 쿠폰·적립금·정기배송 기능 전면 제거)
 
 ---
 
@@ -82,8 +82,6 @@ src/
 │   ├── UserProfilePage.jsx       /mypage (보호)
 │   ├── ProfileModifyPage.jsx     /profile/modify (보호)
 │   ├── WishListPage.jsx          /wishlist (보호)
-│   ├── UserCouponPage.jsx        /coupon (보호)
-│   ├── UserPointPage.jsx         /point (보호)
 │   ├── UserAddressPage .jsx      /address (보호) ← 파일명에 공백 있음 (주의)
 │   ├── WriteReviewPage.jsx       /review/write (보호)
 │   ├── ReviewPage.jsx            /review
@@ -146,8 +144,6 @@ BrowserRouter
         │   ├── /mypage            ProtectedRoute → UserProfilePage
         │   ├── /profile/modify    ProtectedRoute → ProfileModifyPage
         │   ├── /wishlist          ProtectedRoute → WishListPage
-        │   ├── /coupon            ProtectedRoute → UserCouponPage
-        │   ├── /point             ProtectedRoute → UserPointPage
         │   ├── /address           ProtectedRoute → UserAddressPage
         │   ├── /review/write      ProtectedRoute → WriteReviewPage
         │   └── *                  LandingPage (fallback)
@@ -273,6 +269,7 @@ GET /users/me ─────────►  로그인 사용자 정보 반환
 | 항목 | 내용 |
 |---|---|
 | 파일명 오타 | `UserAddressPage .jsx` (공백 포함) — import 시 주의 |
+| 쿠폰·적립금·정기배송 | 기능 전면 삭제됨 (2026-04-29). `UserCouponPage.jsx`·`UserPointPage.jsx` 파일 삭제, 라우트 `/coupon`·`/point` 제거. |
 | Mock 시스템 | 완전 제거됨 (2026-04). 실서버 직접 연동. |
 | MyPageLayout | CLAUDE.md 목표 아키텍처에는 존재하나 현재 미구현 (각 마이페이지는 독립 페이지) |
 | baseQuery.js | 별도 파일 없음 — withReauth 로직이 `src/api/apiSlice.js` 내부에 포함됨 |

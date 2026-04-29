@@ -14,10 +14,7 @@ export default function UserProfilePage() {
     { title: '주문조회', to: '/order/list' },
     { title: '회원정보', to: '/profile/modify' },
     { title: '관심상품', count: profile?.activityCounts?.wishlistCount, to: '/wishlist' },
-    { title: '적립금', to: '/point' },
-    { title: '쿠폰', count: profile?.benefits?.couponCount, to: '/coupon' },
     { title: '게시물관리', count: profile?.activityCounts?.postCount, to: '/profile/posts' },
-    { title: '정기배송', count: profile?.activityCounts?.regularDeliveryCount, to: '/regular-delivery' },
     { title: '배송 주소록 관리', to: '/address' },
   ]
 
@@ -76,20 +73,13 @@ export default function UserProfilePage() {
             </div>
           </div>
 
-          <div className="flex justify-between items-center px-4">
-            {[
-              { label: '적립금', value: profile?.benefits?.points != null ? `${profile.benefits.points}원` : '-' },
-              { label: '쿠폰', value: profile?.benefits?.couponCount != null ? `${profile.benefits.couponCount}개` : '-' },
-              { label: '주문내역', value: profile?.benefits?.orderTotalCount != null ? `${profile.benefits.orderTotalCount}건` : '-' },
-            ].map((item, i) => (
-              <div key={item.label} className="flex items-center flex-1">
-                <div className="text-center flex-1">
-                  <p className="text-[12px] font-bold text-[#bbb] mb-2">{item.label}</p>
-                  <p className="text-[20px] font-black text-[#111]">{item.value}</p>
-                </div>
-                {i < 2 && <div className="w-[1px] h-8 bg-[#eee]" />}
-              </div>
-            ))}
+          <div className="flex justify-center items-center px-4">
+            <div className="text-center">
+              <p className="text-[12px] font-bold text-[#bbb] mb-2">주문내역</p>
+              <p className="text-[20px] font-black text-[#111]">
+                {profile?.benefits?.orderTotalCount != null ? `${profile.benefits.orderTotalCount}건` : '-'}
+              </p>
+            </div>
           </div>
         </section>
 
