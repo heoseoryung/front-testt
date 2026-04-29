@@ -187,8 +187,7 @@ export default function ProductDetailPage() {
           : 0,
         quantity:  qty,
       }).unwrap()
-      setAlertMsg('장바구니에 담겼습니다.')
-      setAlertNav('/cart')
+      navigate('/cart')
     } catch {
       setAlertMsg('장바구니 담기에 실패했습니다.')
       setAlertNav('')

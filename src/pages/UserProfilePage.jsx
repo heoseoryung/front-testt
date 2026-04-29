@@ -47,8 +47,8 @@ export default function UserProfilePage() {
         </div>
 
         <section className="bg-white rounded-[40px] border border-[#eee] p-10 mb-8 shadow-[0_10px_40px_rgba(0,0,0,0.03)]">
-          <div className="flex items-center gap-5 mb-10">
-            <div className="w-[72px] h-[72px] rounded-full overflow-hidden bg-[#f0faf4] flex items-center justify-center shrink-0">
+          <div className="flex flex-col items-center gap-4 mb-10">
+            <div className="w-[100px] h-[100px] rounded-full overflow-hidden bg-[#f0faf4] flex items-center justify-center shrink-0">
               {profile?.userSummary?.profileImgUrl ? (
                 <img
                   src={profile.userSummary.profileImgUrl}
@@ -56,12 +56,12 @@ export default function UserProfilePage() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <span className="text-[28px] font-black text-[#3ea76e] leading-none">
+                <span className="text-[36px] font-black text-[#3ea76e] leading-none">
                   {profile?.userSummary?.name?.[0] ?? '?'}
                 </span>
               )}
             </div>
-            <div>
+            <div className="text-center">
               {profile?.userSummary?.membershipLevel && (
                 <span className="inline-block px-3 py-1 rounded-full text-[11px] font-black bg-[#f0faf4] text-[#3ea76e] mb-2 tracking-widest">
                   {profile.userSummary.membershipLevel}
