@@ -83,6 +83,8 @@ useGetOrderByIdQuery(id)          → GET /orders/{order_id}   (주문 헤더 + 
 
 ### 주문 상품 카드 구조
 
+- 아이템 행 레이아웃: `flex gap-14 py-10 first:pt-0`
+
 ```
 ┌──────────────┐  상품명              [상태 배지]
 │   이미지     │  [옵션명]
