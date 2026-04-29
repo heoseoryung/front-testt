@@ -1,6 +1,6 @@
 # 프로젝트 구조
 
-기준일: 2026-04-29 (UserCouponPage·UserPointPage 삭제 / 쿠폰·적립금·정기배송 기능 전면 제거)
+기준일: 2026-04-29 (UserCouponPage·UserPointPage 삭제 / 쿠폰·적립금·정기배송 제거 / FaqPage·FaqDetailPage 추가 / pages/LoginPage·SignupPage 미사용 파일 삭제)
 
 ---
 
@@ -89,6 +89,8 @@ src/
 │   ├── CSPage.jsx                /cs
 │   ├── NoticePage.jsx            /notice
 │   ├── NoticeDetailPage.jsx      /notice/:id
+│   ├── FaqPage.jsx               /faq
+│   ├── FaqDetailPage.jsx         /faq/:id
 │   ├── TermsPage.jsx             /terms
 │   └── PrivacyPage.jsx           /privacy
 │
@@ -132,6 +134,8 @@ BrowserRouter
         │   ├── /cs                CSPage
         │   ├── /notice            NoticePage
         │   ├── /notice/:id        NoticeDetailPage
+        │   ├── /faq               FaqPage
+        │   ├── /faq/:id           FaqDetailPage
         │   ├── /terms             TermsPage
         │   ├── /privacy           PrivacyPage
         │   │
@@ -148,8 +152,8 @@ BrowserRouter
         │   ├── /review/write      ProtectedRoute → WriteReviewPage
         │   └── *                  LandingPage (fallback)
         │
-        ├── /login                 LoginPage (Layout 밖)
-        └── /signup                SignupPage (Layout 밖)
+        ├── /login                 LoginPage (Layout 밖) ← features/auth/LoginPage.jsx
+        └── /signup                SignupPage (Layout 밖) ← features/auth/SignupPage.jsx
 ```
 
 ---

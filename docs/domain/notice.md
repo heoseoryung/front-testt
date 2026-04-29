@@ -1,6 +1,6 @@
 # Notice 도메인 명세
 
-기준일: 2026-04-29
+기준일: 2026-04-29 (FaqPage·FaqDetailPage 구현 완료)
 
 ---
 
@@ -20,6 +20,8 @@ NoticePage과 NoticeDetailPage로 구성된다.
 | ------------- | ------------------ | ----------- |
 | `/notice`     | `NoticePage`       | 없음 (공개) |
 | `/notice/:id` | `NoticeDetailPage` | 없음 (공개) |
+| `/faq`        | `FaqPage`          | 없음 (공개) |
+| `/faq/:id`    | `FaqDetailPage`    | 없음 (공개) |
 
 ---
 
